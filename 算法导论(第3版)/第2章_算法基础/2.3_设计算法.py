@@ -8,7 +8,7 @@ def merge(array, p, q, r):
     elif not isinstance(array, list):
         return [array]
     left_array = array[p:q + 1]
-    right_array = array[q + 1:r+1]
+    right_array = array[q + 1:r + 1]
     left_len = len(left_array)
     right_len = len(right_array)
     new_array = []
@@ -24,8 +24,7 @@ def merge(array, p, q, r):
         new_array.extend(left_array[i::])
     elif j < right_len:
         new_array.extend(right_array[j::])
-    array[p:r+1] = new_array
-    # print(new_array)
+    array[p:r + 1] = new_array
     return array
 
 
@@ -42,17 +41,83 @@ def merge_sort(array, p, r):
     elif p < r:
         q = math.floor((p + r) / 2)
         left_array = merge_sort(array, p, q)
-        right_array = merge_sort(array, q+1, r)
+        right_array = merge_sort(array, q + 1, r)
         if p == q:
             array[p] = left_array
-        elif q+1 == r:
-            array[q+1] = right_array
+        elif q + 1 == r:
+            array[q + 1] = right_array
         else:
-            array[p:q+1] = left_array[p:q+1]
-            array[q+1:r+1] = right_array[q+1:r+1]
+            array[p:q + 1] = left_array[p:q + 1]
+            array[q + 1:r + 1] = right_array[q + 1:r + 1]
         return merge(array, p, q, r)
 
 
+# 2.3-4 用递归实现插入排序
+def lx23_4(array):
+    if len(array) == 1:
+        return array
+    else:
+        key = array[-1]
+        new_array = lx23_4(array[:-1])
+        j = len(new_array) - 1
+        while j >= 0 and new_array[j] > key:
+            j -= 1
+        new_array.insert(j + 1, key)
+        return new_array
+
+
+# 2.3-5 定义二分法查找函数
+def bi_search(ordered_array, p, r, v):
+    if p + 1 == r and v == ordered_array[p]:
+        return p
+    elif p + 1 == r and v != ordered_array[p]:
+        return False
+    pointer = math.floor((p + r) / 2)
+    if ordered_array[pointer] == v:
+        return pointer
+    elif ordered_array[pointer] < v:
+        return bi_search(ordered_array, pointer, r + 1, v)
+    else:
+        return bi_search(ordered_array, p, pointer, v)
+
+
+# 2.3-6 用二分查找优化插入排序
+def bi_search_opt(ordered_array, p, r, v):
+    # 对递增(非递减)序列orderd_array[p, r]进行二分查找，返回值为小于等于v的最右侧数据的下标
+    if p + 1 == r:
+        return p
+    pointer = math.floor((p + r) / 2)
+    if ordered_array[pointer] == v:
+        return pointer
+    # 向下取整时，需要对序列最右侧处理
+    elif ordered_array[pointer] < v and pointer < len(ordered_array)-2:
+        return bi_search_opt(ordered_array, pointer, r, v)
+    elif ordered_array[pointer] < v and pointer == len(ordered_array)-2:
+        return len(ordered_array) - 1
+    else:
+        return bi_search_opt(ordered_array, p, pointer, v)
+
+
+def insertion_sort_opt(array):
+    if len(array) == 1:
+        return array
+    else:
+        key = array[-1]
+        new_array = lx23_4(array[:-1])
+        j = len(new_array) - 1
+        idx = bi_search_opt(new_array, 0, len(new_array)-1, key)
+        new_array.insert(idx+1, key)
+        return new_array
+
+
 if __name__ == '__main__':
-    a = [5, 3, 1, 9, 7, 2, 4, 6, 8, 10]
-    print(merge_sort(a, 0, 9))
+    A = [3, 41, 52, 26, 38, 57, 9, 49]
+    B = [3, 9, 26, 38, 41, 49, 52, 57]
+    print(merge_sort(A, 0, len(A) - 1))
+    print(lx23_4(A))
+    print(bi_search_opt(B, 0, 7, 3))
+    print(bi_search_opt(B, 0, 7, 37))
+    print(bi_search_opt(B, 0, 7, 39))
+    print(bi_search_opt(B, 0, 7, 57))
+    print(bi_search_opt(B, 0, 7, 58))
+    print(insertion_sort_opt(A))
