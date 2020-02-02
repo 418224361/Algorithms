@@ -90,24 +90,42 @@ def bi_search_opt(ordered_array, p, r, v):
     if ordered_array[pointer] == v:
         return pointer
     # 向下取整时，需要对序列最右侧处理
-    elif ordered_array[pointer] < v and pointer < len(ordered_array)-2:
+    elif ordered_array[pointer] < v and pointer < len(ordered_array) - 2:
         return bi_search_opt(ordered_array, pointer, r, v)
-    elif ordered_array[pointer] < v and pointer == len(ordered_array)-2:
+    elif ordered_array[pointer] < v and pointer == len(ordered_array) - 2:
         return len(ordered_array) - 1
     else:
         return bi_search_opt(ordered_array, p, pointer, v)
 
 
 def insertion_sort_opt(array):
+    # 使用二分法优化后的插入排序
     if len(array) == 1:
         return array
     else:
         key = array[-1]
         new_array = lx23_4(array[:-1])
         j = len(new_array) - 1
-        idx = bi_search_opt(new_array, 0, len(new_array)-1, key)
-        new_array.insert(idx+1, key)
+        idx = bi_search_opt(new_array, 0, len(new_array) - 1, key)
+        new_array.insert(idx + 1, key)
         return new_array
+
+
+# 2.3-7
+def lx23_7(array, v):
+    # array的元素为整数。找出array中的两个元素，使其和为v
+    ordered_array = merge_sort(array, 0, len(array)-1)
+    i = 0
+    j = len(ordered_array) - 1
+    while i <= j:
+        sumary = ordered_array[i] + ordered_array[j]
+        if sumary == v:
+            return ordered_array[i], ordered_array[j]
+        elif sumary < v:
+            i += 1
+        elif sumary > v:
+            j -= 1
+    return False
 
 
 if __name__ == '__main__':
@@ -121,3 +139,4 @@ if __name__ == '__main__':
     print(bi_search_opt(B, 0, 7, 57))
     print(bi_search_opt(B, 0, 7, 58))
     print(insertion_sort_opt(A))
+    print(lx23_7(A, 50))
