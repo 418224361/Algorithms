@@ -128,6 +128,32 @@ def lx23_7(array, v):
     return False
 
 
+# 思考题2.1
+def merge_sort_opt(array, p, r, k):
+    """
+    对序列array[p, r]进行归并排序，当序列长度小于k时，使用插入排序
+    :param array: array的子列是待排序序列
+    :param p: 待排序子列在array的起始位置下标值，array的第一个元素p = 0
+    :param r: 待排序子列在array的终止位置下标值，array的最后一个元素r = len(array) - 1
+    :param k: 当序列长度小于等于k时，使用插入排序
+    :return: 完成排序的子列
+    """
+    if r - p < k:
+        return insertion_sort_opt(array[p, r])
+    elif p < r:
+        q = math.floor((p + r) / 2)
+        left_array = merge_sort(array, p, q)
+        right_array = merge_sort(array, q + 1, r)
+        if p == q:
+            array[p] = left_array
+        elif q + 1 == r:
+            array[q + 1] = right_array
+        else:
+            array[p:q + 1] = left_array[p:q + 1]
+            array[q + 1:r + 1] = right_array[q + 1:r + 1]
+        return merge(array, p, q, r)
+
+
 if __name__ == '__main__':
     A = [3, 41, 52, 26, 38, 57, 9, 49]
     B = [3, 9, 26, 38, 41, 49, 52, 57]
@@ -140,3 +166,4 @@ if __name__ == '__main__':
     print(bi_search_opt(B, 0, 7, 58))
     print(insertion_sort_opt(A))
     print(lx23_7(A, 50))
+    print(merge_sort_opt(A, 0, 7, 3))
