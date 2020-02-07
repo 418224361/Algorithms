@@ -154,6 +154,15 @@ def merge_sort_opt(array, p, r, k):
         return merge(array, p, q, r)
 
 
+# 思考题2.1
+def bubble_sort(array):
+    for i in range(len(array)-1):
+        for j in range(i, len(array)-1):
+            if array[j] > array[j+1]:
+                array[j], array[j+1] = array[j+1], array[j]
+    return array
+
+
 if __name__ == '__main__':
     A = [3, 41, 52, 26, 38, 57, 9, 49]
     B = [3, 9, 26, 38, 41, 49, 52, 57]
