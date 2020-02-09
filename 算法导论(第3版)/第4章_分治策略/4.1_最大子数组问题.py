@@ -4,9 +4,9 @@ import math
 def find_max_crossing_subarray(array, low, mid, high):
     # 序列array[low, high]的跨mid的最大子序列
     if max(array) < 0:
-        return array.index(max(array)), array.index(max(array))+1, max(array)
+        return array.index(max(array)), array.index(max(array)) + 1, max(array)
     elif min(array) >= 0:
-        return 0, len(array)-1, sum(array)
+        return 0, len(array) - 1, sum(array)
     else:
         i = j = mid
         left_max = right_max = mid  # 记录最大子列的位置索引
@@ -32,7 +32,7 @@ def find_max_subarray(array, low, high):
     if high - low == 0:
         return low, high, array[low]
     elif high - low == 1:
-        return find_max_crossing_subarray(array, low, low+1, high)
+        return find_max_crossing_subarray(array, low, low + 1, high)
     else:
         mid = math.floor((low + high) / 2)
         left_low, left_high, left_sum = find_max_subarray(array, low, mid)
@@ -47,13 +47,59 @@ def find_max_subarray(array, low, high):
             return right_low, right_high, max_sum
 
 
+# 练习4.1-2
+def lx41_2(array):
+    # 暴力法求最大子数组
+    max_sum = array[0]
+    max_i = 0
+    max_j = 0
+    for i in range(len(array)):
+        for j in range(i, len(array)):
+            summary = sum(array[i:j + 1])
+            if summary > max_sum:
+                max_i = i
+                max_j = min(j + 1, len(array) - 1)
+                max_sum = summary
+    return max_i, max_j, max_sum
+
+
+# 4.1-5 线性方法查找最大子数组
+# 函数不对，待完善
+# def max_subarray(array, p, q):
+#     # array[p, q]的最大子列
+#     if q - p < 1:
+#         return p, q + 1, array[p]
+#     elif q - p == 1:
+#         max_sum = max(array[p], array[q], array[p] + array[q])
+#         if array[p] == max_sum:
+#             return p, q, max_sum
+#         elif array[q] == max_sum:
+#             return q, q + 1, max_sum
+#         else:
+#             return p, q + 1, max_sum
+#     elif q - p >= 2:
+#         left, right, summary = max_subarray(array, p, q - 1)
+#         if right == q - 2 and array[q - 1] > 0:
+#             return left, q, summary + array[q - 1]
+#         elif right == q - 2 and array[q - 1] < 0:
+#             return left, right, summary
+#         else:
+#             if sum(array[right + 1: q - 1]) + array[q - 1] > 0:
+#                 return left, q, summary + sum(array[right + 1: q - 1]) + array[q - 1]
+#             return left, right, summary
+
+
 if __name__ == '__main__':
     A = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7]
-    B = [-abs(i) for i in A]
-    C = [abs(i) for i in A]
-    print(A)
-    print(B)
-    print(C)
-    print(find_max_subarray(A, 0, len(A) - 1))
-    print(find_max_subarray(B, 0, len(B)-1))
-    print(find_max_subarray(C, 0, len(C)-1))
+    # B = [-abs(i) for i in A]
+    # C = [abs(i) for i in A]
+    # print(A)
+    # print(B)
+    # print(C)
+    # print(find_max_subarray(A, 0, len(A) - 1))
+    # print(find_max_subarray(B, 0, len(B) - 1))
+    # print(find_max_subarray(C, 0, len(C) - 1))
+    # print(lx41_2(A))
+    # print(lx41_2(B))
+    # print(lx41_2(C))
+    print(max_subarray(A, 0, 15))
