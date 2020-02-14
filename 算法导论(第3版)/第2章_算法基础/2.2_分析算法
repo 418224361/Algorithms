@@ -1,0 +1,14 @@
+# 2-3 Horner规则
+a = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+x = 2
+y = 0
+for i in range(10):
+    # print(i)
+    y = a[9 - i] + 2 * y
+print(y)
+
+# 普通算法
+y = 0
+for i in range(10):
+    y = y + a[i] * (x**i)
+print(y)
