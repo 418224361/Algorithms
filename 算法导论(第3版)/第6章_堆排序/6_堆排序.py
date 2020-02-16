@@ -14,15 +14,15 @@ def max_heapify(array, i):
     else:
         current_node = array[k - 1]
         left_child = array[2 * k - 1]
-        if len(array) > 2:
+        if 2 * k <= len(array) - 1:
             right_child = array[2 * k]
         else:
             right_child = min(current_node, left_child) - 1
-        maxmum_node = max(current_node, left_child, right_child)
-        if left_child == maxmum_node:
+        maximum_node = max(current_node, left_child, right_child)
+        if left_child == maximum_node:
             array[k - 1], array[2 * k - 1] = left_child, current_node
             return max_heapify(array, 2 * k - 1)
-        elif right_child == maxmum_node:
+        elif right_child == maximum_node:
             array[k - 1], array[2 * k] = right_child, current_node
             return max_heapify(array, 2 * k)
         else:
@@ -39,15 +39,44 @@ def heap_sort(array):
     # 并没有实现原址排序，若想实现原址排序，需要链表结构。因为做到max_heapify只对array[:-1]个元素排序
     build_max_heap(array)
     heap_length = len(array)
+    local_array = array[::]
     ordered_array = []
     while heap_length > 0:
-        array[heap_length - 1], array[0] = array[0], array[heap_length - 1]
+        local_array[heap_length - 1], local_array[0] = local_array[0], local_array[heap_length - 1]
         heap_length -= 1
-        ordered_array.append(array.pop())
-        max_heapify(array, 0)
+        ordered_array.append(local_array.pop())
+        max_heapify(local_array, 0)
     return ordered_array
 
 
+def heap_max(array):
+    new_array = heap_sort(array)
+    return new_array[0]
+
+
+def heap_extract_max(array):
+    build_max_heap(array)
+    if len(array) < 1:
+        return ValueError
+    else:
+        maximum = array[0]
+        array[len(array) - 1], array[0] = array[0], array[len(array) - 1]
+        array = array[:-1]
+        build_max_heap(array)
+        return maximum, array
+
+
+def heap_increase_key(array, i, k):
+    build_max_heap(array)
+    if k < array[i]:
+        raise ValueError
+    else:
+        while array[math.floor((i + 1) / 2 - 1)] < k and i > 0:
+            array[math.floor((i + 1) / 2 - 1)], array[i] = k, array[math.floor((i + 1) / 2 - 1)]
+            i = math.floor((i + 1) / 2 - 1)
+        return array
+
+
 if __name__ == '__main__':
-    A = [0, 5, 100, 1, 2, 3, 4]
-    print(heap_sort(A))
+    fig6_5 = [16, 14, 10, 8, 7, 9, 3, 2, 4, 1]
+    print(heap_increase_key(fig6_5, 8, 15) == [16, 15, 10, 14, 7, 9, 3, 2, 8, 1])
