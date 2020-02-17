@@ -128,10 +128,10 @@ def lx23_7(array, v):
     return False
 
 
-# 思考题2.1
+# 思考题2-1
 def merge_sort_opt(array, p, r, k):
     """
-    对序列array[p, r]进行归并排序，当序列长度小于k时，使用插入排序
+    对序列array[p, r]进行归并排序，当序列长度小于k时，使用插入排序(二分查找的插入排序)
     :param array: array的子列是待排序序列
     :param p: 待排序子列在array的起始位置下标值，array的第一个元素p = 0
     :param r: 待排序子列在array的终止位置下标值，array的最后一个元素r = len(array) - 1
@@ -154,13 +154,29 @@ def merge_sort_opt(array, p, r, k):
         return merge(array, p, q, r)
 
 
-# 思考题2.1
+# 思考题2-2
 def bubble_sort(array):
     for i in range(len(array)-1):
         for j in range(i, len(array)-1):
             if array[j] > array[j+1]:
                 array[j], array[j+1] = array[j+1], array[j]
     return array
+
+
+# 思考题2-3 Horner规则
+a = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+x = 2
+y = 0
+for i in range(10):
+    # print(i)
+    y = a[9 - i] + 2 * y
+print(y)
+
+# 普通算法
+y = 0
+for i in range(10):
+    y = y + a[i] * (x ** i)
+print(y)
 
 
 if __name__ == '__main__':
