@@ -114,7 +114,7 @@ def insertion_sort_opt(array):
 # 2.3-7
 def lx23_7(array, v):
     # array的元素为整数。找出array中的两个元素，使其和为v
-    ordered_array = merge_sort(array, 0, len(array)-1)
+    ordered_array = merge_sort(array, 0, len(array) - 1)
     i = 0
     j = len(ordered_array) - 1
     while i <= j:
@@ -156,43 +156,97 @@ def merge_sort_opt(array, p, r, k):
 
 # 思考题2-2
 def bubble_sort(array):
-    for i in range(len(array)-1):
-        for j in range(i, len(array)-1):
-            if array[j] > array[j+1]:
-                array[j], array[j+1] = array[j+1], array[j]
+    for i in range(len(array) - 1):
+        for j in range(i, len(array) - 1):
+            if array[j] > array[j + 1]:
+                array[j], array[j + 1] = array[j + 1], array[j]
     return array
 
 
-# 思考题2-3 Horner规则
-a = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-x = 2
-y = 0
-for i in range(10):
-    # print(i)
-    y = a[9 - i] + 2 * y
-print(y)
-
-# 普通算法
-y = 0
-for i in range(10):
-    y = y + a[i] * (x ** i)
-print(y)
-
-
 # 思考题2-4 逆序对
-# TODO 完成逆序对
+def inversions_merge(array, p, q, r, inversions=False):
+    if inversions is False:
+        inversions = 0
+    # 使用分治法计算逆序对
+    if p > q + 1 or q > r:
+        raise ValueError('merge函数的分割点不在区间范围内')
+    elif not isinstance(array, list):
+        return [array]
+    left_array = array[p:q + 1]
+    right_array = array[q + 1:r + 1]
+    left_len = len(left_array)
+    right_len = len(right_array)
+    new_array = []
+    i = j = 0
+    while i <= left_len - 1 and j <= right_len - 1:
+        if left_array[i] <= right_array[j]:
+            new_array.append(left_array[i])
+            i += 1
+        else:
+            new_array.append(right_array[j])
+            inversions += q - p - i + 1
+            j += 1
+    if i < left_len:
+        new_array.extend(left_array[i::])
+        inversions += (r - q) * (q - p - i)
+    elif j < right_len:
+        new_array.extend(right_array[j::])
+    array[p:r + 1] = new_array
+    return array, inversions
+
+
+def inversions_merge_sort(array, p, r, inversions=False):
+    """
+    对序列array[p, r]进行排序，并返回初始序列的逆序对
+    :param array: array的子列是待排序序列
+    :param p: 待排序子列在array的起始位置下标值，array的第一个元素p=0
+    :param r: 待排序子列在array的终止位置下标值，array的最后一个元素r=len(array)-1
+    :param inversions: 逆序对数量
+    :return: 完成排序的子列和逆序对数量
+    """
+    if inversions is False:
+        inversions = 0
+    if p == r:
+        return array[p], 0
+    elif p < r:
+        q = math.floor((p + r) / 2)
+        left_array, left_inversions = inversions_merge_sort(array, p, q, inversions)
+        right_array, right_inversions = inversions_merge_sort(array, q + 1, r, inversions)
+        if p == q:
+            array[p] = left_array
+        elif q + 1 == r:
+            array[q + 1] = right_array
+        else:
+            array[p:q + 1] = left_array[p:q + 1]
+            array[q + 1:r + 1] = right_array[q + 1:r + 1]
+        inversions = left_inversions + right_inversions + inversions_merge(array, p, q, r)[1]
+        return inversions_merge(array, p, q, r, inversions)
 
 
 if __name__ == '__main__':
     A = [3, 41, 52, 26, 38, 57, 9, 49]
     B = [3, 9, 26, 38, 41, 49, 52, 57]
-    print(merge_sort(A, 0, len(A) - 1))
-    print(lx23_4(A))
-    print(bi_search_opt(B, 0, 7, 3))
-    print(bi_search_opt(B, 0, 7, 37))
-    print(bi_search_opt(B, 0, 7, 39))
-    print(bi_search_opt(B, 0, 7, 57))
-    print(bi_search_opt(B, 0, 7, 58))
-    print(insertion_sort_opt(A))
-    print(lx23_7(A, 50))
-    print(merge_sort_opt(A, 0, 7, 3))
+    # print(merge_sort(A, 0, len(A) - 1))
+    # print(lx23_4(A))
+    # print(bi_search_opt(B, 0, 7, 3))
+    # print(bi_search_opt(B, 0, 7, 37))
+    # print(bi_search_opt(B, 0, 7, 39))
+    # print(bi_search_opt(B, 0, 7, 57))
+    # print(bi_search_opt(B, 0, 7, 58))
+    # print(insertion_sort_opt(A))
+    # print(lx23_7(A, 50))
+    # print(merge_sort_opt(A, 0, 7, 3))
+    print(inversions_merge_sort(A, 0, 7, inversions=False))
+
+    # 思考题2-3 Horner规则
+    a = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    x = 2
+    y = 0
+    for i in range(10):
+        y = a[9 - i] + 2 * y
+    print(y)
+    # 普通算法
+    y = 0
+    for i in range(10):
+        y = y + a[i] * (x ** i)
+    print(y)
