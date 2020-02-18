@@ -6,8 +6,19 @@
 对数线性函数 nlog(n)
 幂函数 n^a
 指数函数 a^n
-阶乘 n!
-幂指函数 n^n
+阶乘 n! ~ 幂指函数 n^n
 
 g1 = 2^2^(n+1) ~ g2 = 2^2^n
 g3 = (n+1)! ~ g4 = n!
+g5 = exp(n)
+g6 = n * 2^n
+g7 = 2^n ~ g8 = (3/2)^n
+g9 = n^(lg(lg(n))) ~ lg(n)^lg(n)
+g10 = (lg(n))!
+
+n^3
+n^2 ~ 4^lg(n)
+n*lg(n) ~ lg(n!)
+2^(lg(n))
+n
+(lgn)^2
