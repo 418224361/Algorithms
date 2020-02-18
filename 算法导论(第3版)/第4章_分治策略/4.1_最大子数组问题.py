@@ -63,43 +63,22 @@ def lx41_2(array):
     return max_i, max_j, max_sum
 
 
-# 4.1-5 线性方法查找最大子数组
-# 函数不对，待完善
-# def max_subarray(array, p, q):
-#     # array[p, q]的最大子列
-#     if q - p < 1:
-#         return p, q + 1, array[p]
-#     elif q - p == 1:
-#         max_sum = max(array[p], array[q], array[p] + array[q])
-#         if array[p] == max_sum:
-#             return p, q, max_sum
-#         elif array[q] == max_sum:
-#             return q, q + 1, max_sum
-#         else:
-#             return p, q + 1, max_sum
-#     elif q - p >= 2:
-#         left, right, summary = max_subarray(array, p, q - 1)
-#         if right == q - 2 and array[q - 1] > 0:
-#             return left, q, summary + array[q - 1]
-#         elif right == q - 2 and array[q - 1] < 0:
-#             return left, right, summary
-#         else:
-#             if sum(array[right + 1: q - 1]) + array[q - 1] > 0:
-#                 return left, q, summary + sum(array[right + 1: q - 1]) + array[q - 1]
-#             return left, right, summary
+# 练习4.1-4 允许返回空数组
+def lx41_4(array, low, high):
+    result = find_max_subarray(array, low, high)
+    if result[-1] >= 0:
+        return result
+    return False
+
+
+# TODO 4.1-5 线性方法查找最大子数组
 
 
 if __name__ == '__main__':
     A = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7]
-    # B = [-abs(i) for i in A]
-    # C = [abs(i) for i in A]
-    # print(A)
-    # print(B)
-    # print(C)
-    # print(find_max_subarray(A, 0, len(A) - 1))
-    # print(find_max_subarray(B, 0, len(B) - 1))
-    # print(find_max_subarray(C, 0, len(C) - 1))
-    # print(lx41_2(A))
-    # print(lx41_2(B))
-    # print(lx41_2(C))
-    print(max_subarray(A, 0, 15))
+    B = [-abs(i) for i in A]
+    C = [abs(i) for i in A]
+    print(find_max_subarray(A, 0, len(A) - 1))
+    print(find_max_subarray(B, 0, len(B) - 1))
+    print(find_max_subarray(C, 0, len(C) - 1))
+    print(lx41_4(B, 0, len(B) - 1))
