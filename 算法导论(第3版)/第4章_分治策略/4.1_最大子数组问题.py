@@ -72,6 +72,23 @@ def lx41_4(array, low, high):
 
 
 # TODO 4.1-5 线性方法查找最大子数组
+# 伪代码
+# ITERATIVE-FIND-MAXIMUM-SUBARRAY(A)
+#     n = A.length
+#     max-sum = -∞
+#     sum = -∞
+#     for j = 1 to n
+#         currentHigh = j
+#         if sum > 0
+#             sum = sum + A[j]
+#         else
+#             currentLow = j
+#             sum = A[j]
+#         if sum > max-sum
+#             max-sum = sum
+#             low = currentLow
+#             high = currentHigh
+#     return (low, high, max-sum)
 
 
 if __name__ == '__main__':
