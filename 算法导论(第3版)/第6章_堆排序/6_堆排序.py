@@ -77,6 +77,19 @@ def heap_increase_key(array, i, k):
         return array
 
 
+def heap_delete(array, i):
+    build_max_heap(array)
+    if array[i] > array[-1]:
+        array[i] = array[-1]
+        build_max_heap(array)
+        return array[:-1]
+    else:
+        array[i] = array[-1]
+        return array[:-1]
+
+
 if __name__ == '__main__':
     fig6_5 = [16, 14, 10, 8, 7, 9, 3, 2, 4, 1]
     print(heap_increase_key(fig6_5, 8, 15) == [16, 15, 10, 14, 7, 9, 3, 2, 8, 1])
+    list_65_8 = [15,7,9,1,2,3,8]
+    print(heap_delete(list_65_8, 4))
