@@ -66,30 +66,48 @@ def heap_extract_max(array):
         return maximum, array
 
 
-def heap_increase_key(array, i, k):
-    build_max_heap(array)
-    if k < array[i]:
+def heap_increase_key(array, i, key):
+    if key < array[i]:
         raise ValueError
     else:
-        while array[math.floor((i + 1) / 2 - 1)] < k and i > 0:
-            array[math.floor((i + 1) / 2 - 1)], array[i] = k, array[math.floor((i + 1) / 2 - 1)]
+        # 若大于父节点，则和父节点交换
+        while array[math.floor((i + 1) / 2 - 1)] < key and i > 0:
+            array[math.floor((i + 1) / 2 - 1)], array[i] = key, array[math.floor((i + 1) / 2 - 1)]
             i = math.floor((i + 1) / 2 - 1)
         return array
+
+
+def max_heap_insert(array, key):
+    array.append(key)
+    return heap_increase_key(array, len(array) - 1, key)
 
 
 def heap_delete(array, i):
     build_max_heap(array)
     if array[i] > array[-1]:
         array[i] = array[-1]
-        build_max_heap(array)
+        max_heapify(array, i)
         return array[:-1]
     else:
         array[i] = array[-1]
         return array[:-1]
 
 
+# 思考题6-1，用插入法建堆
+def build_max_heap_prime(array):
+    ordered_array = []
+    for i in range(len(array)):
+        max_heap_insert(ordered_array, array[i])
+    return ordered_array
+
+
 if __name__ == '__main__':
     fig6_5 = [16, 14, 10, 8, 7, 9, 3, 2, 4, 1]
-    print(heap_increase_key(fig6_5, 8, 15) == [16, 15, 10, 14, 7, 9, 3, 2, 8, 1])
-    list_65_8 = [15,7,9,1,2,3,8]
-    print(heap_delete(list_65_8, 4))
+    print(heap_increase_key(fig6_5[:], len(fig6_5) - 1, 15))
+    list_65_8 = [15, 7, 9, 1, 2, 3, 8]
+    print(heap_delete(list_65_8[:], 4))
+    fig6_5 = [16, 14, 10, 8, 7, 9, 3, 2, 4, 1]
+    print(max_heap_insert(fig6_5[:], 15))
+    a = [1, 2, 3, 4, 5, 6]
+    print(build_max_heap_prime(a))
+    print(build_max_heap(a))
