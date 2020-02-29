@@ -107,7 +107,7 @@ def hoare_quick_sort(array):
         return left_array
     
     
-    def partition_prime(array, p, r):
+def partition_prime(array, p, r):
     """
     对数组array[p:r]进行分割，不含r, p<=q<=t<=r 针对array中相同元素进行处理
     :return: 返回分割后的数组以及主元(pivot element)
@@ -123,26 +123,28 @@ def hoare_quick_sort(array):
                 t += 1
                 array[t], array[j] = array[j], array[t]
             elif array[j] < x:
-                small = array[j]
-                equ = array[i+1]
-                big = array[t+1]
-                array[i+1] = small
-                array[t+1] = equ
-                array[j] = big
                 i += 1
                 t += 1
-                # array[i], array[j] = array[j], array[i]
-        array[i + 1], array[r - 1] = array[r - 1], array[i + 1]
-    return array, i + 1
+                # temp = array[:]
+                small = array[j]
+                notless = array[i]
+                big = array[t]
+                # 下面两行的顺序不能颠倒
+                array[t] = notless
+                array[i] = small
+
+                array[j] = big
+        array[t + 1], array[r - 1] = array[r - 1], array[t + 1]
+    return array, i, t
 
 
 if __name__ == '__main__':
     A = [2, 8, 7, 1, 3, 5, 6, 4]
     B = [13, 19, 9, 5, 12, 8, 7, 4, 11, 2, 6, 21]
-    print(quick_sort(A[:]))
-    print(randomized_quick_sort(A[:]))
-    print(hoare_quick_sort(A[:]))
-
+    # print(quick_sort(A[:]))
+    # print(randomized_quick_sort(A[:]))
+    # print(hoare_quick_sort(A[:]))
+    print(partition_prime(A[:], 0, len(A)))
     # 思考题7-1
     """
     x=13
