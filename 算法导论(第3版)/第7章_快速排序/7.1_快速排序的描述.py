@@ -105,6 +105,35 @@ def hoare_quick_sort(array):
             right_array = quick_sort(array[q:len(array)])
             left_array.extend(right_array)
         return left_array
+    
+    
+    def partition_prime(array, p, r):
+    """
+    对数组array[p:r]进行分割，不含r, p<=q<=t<=r 针对array中相同元素进行处理
+    :return: 返回分割后的数组以及主元(pivot element)
+    """
+    if p > r:
+        return ValueError
+    else:
+        x = array[r - 1]
+        i = p - 1
+        t = p - 1
+        for j in range(p, r - 1):
+            if array[j] == x:
+                t += 1
+                array[t], array[j] = array[j], array[t]
+            elif array[j] < x:
+                small = array[j]
+                equ = array[i+1]
+                big = array[t+1]
+                array[i+1] = small
+                array[t+1] = equ
+                array[j] = big
+                i += 1
+                t += 1
+                # array[i], array[j] = array[j], array[i]
+        array[i + 1], array[r - 1] = array[r - 1], array[i + 1]
+    return array, i + 1
 
 
 if __name__ == '__main__':
