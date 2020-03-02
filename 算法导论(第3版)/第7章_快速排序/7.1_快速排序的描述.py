@@ -1,5 +1,5 @@
 import random
-
+from Algorithms.TailRecursion import tail_call_optimized
 
 def partition(array, p, r):
     """
@@ -195,6 +195,13 @@ def quick_sort_prime(array):
             smaller_array.extend(greater_array)
             return smaller_array
 
+@tail_call_optimized
+def tail_fib(n, acc1=0, acc2=1):
+    if n == 0:
+        return acc1
+    else:
+        return tail_fib(n - 1, acc2, acc1 + acc2)
+
 
 if __name__ == '__main__':
     A = [2, 8, 7, 1, 3, 5, 6, 4]
@@ -211,6 +218,8 @@ if __name__ == '__main__':
     print(quick_sort_prime(B[:]))
     print(quick_sort_prime(C[:]))
     print(quick_sort_prime(D[:]))
+
+    print(tail_fib(10000))
 
     # 思考题7-1
     """
