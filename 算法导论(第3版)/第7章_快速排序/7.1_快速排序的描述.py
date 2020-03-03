@@ -1,5 +1,7 @@
 import random
+import math
 from Algorithms.TailRecursion import tail_call_optimized
+
 
 def partition(array, p, r):
     """
@@ -195,12 +197,28 @@ def quick_sort_prime(array):
             smaller_array.extend(greater_array)
             return smaller_array
 
+
 @tail_call_optimized
 def tail_fib(n, acc1=0, acc2=1):
+    # 尾递归的一个例子
     if n == 0:
         return acc1
     else:
         return tail_fib(n - 1, acc2, acc1 + acc2)
+
+
+# 练习题7-4
+def pseudo_tail_recursion_quick_sort(array, p, r):
+    # 伪尾递归版本。注意，不是真正的尾递归
+    while p < r:
+        array, q = partition(array, p, r)
+        if q < math.floor((p + r - 1) / 2):
+            pseudo_tail_recursion_quick_sort(array, p, q)
+            p = q + 1
+        else:
+            pseudo_tail_recursion_quick_sort(array, q + 1, r)
+            r = q
+    return array
 
 
 if __name__ == '__main__':
@@ -218,8 +236,11 @@ if __name__ == '__main__':
     print(quick_sort_prime(B[:]))
     print(quick_sort_prime(C[:]))
     print(quick_sort_prime(D[:]))
-
-    print(tail_fib(10000))
+    print(pseudo_tail_recursion_quick_sort(A[:], 0, len(A[:])))
+    print(pseudo_tail_recursion_quick_sort(B[:], 0, len(B[:])))
+    print(pseudo_tail_recursion_quick_sort(C[:], 0, len(C[:])))
+    print(pseudo_tail_recursion_quick_sort(D[:], 0, len(D[:])))
+    # print(tail_fib(10000))
 
     # 思考题7-1
     """
