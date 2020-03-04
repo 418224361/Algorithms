@@ -1,0 +1,32 @@
+渐近增长率从高到低依次是：
+
+阶乘 n! ~ 幂指函数 n^n
+指数函数 a^n
+幂函数 n^a
+对数线性函数 nlog(n)
+线性函数 n
+对数函数 lg(n)
+多重对数函数 lg*(n)
+
+g1 = 2^2^(n+1) ~ g2 = 2^2^n
+g3 = (n+1)! ~ g4 = n!
+g5 = exp(n)
+g6 = n * 2^n
+g7 = 2^n
+g8 = (3/2)^n
+g9 = n^(lg(lg(n))) ~  lg(n)^lg(n)
+g10 = (lg(n))!
+g11 = n^3
+g12 = n^2 ~ g13 = 4^lg(n) ~ g14 = 2^(2*lg(n))
+g15 = n*lg(n) ~ g16 = lg(n!)
+g17 = 2^(lg(n)) ~ g18 = n
+g19 = (sqrt(2))^lg(n)
+g20 = 2^(sqrt(2*lg(n)))
+g21 = (lg(n))^2
+g22 = ln(n)
+g23 = sqrt(lg(n))
+g24 = lnln(n)
+g25 = 2^lg*n
+g26 = lg*n ~ g27 = lg*(lgn)
+g28 = lg(lg*)n
+g29 = n^(1/lg(n)) ~ g30 = 1
