@@ -181,33 +181,14 @@ def quick_sort_prime(array):
     else:
         array, q, t = randomized_partition_prime(array, 0, len(array))
         smaller_array = quick_sort_prime(array[:q])
-        equal_array = quick_sort_prime(array[q: t])
+        equal_array = array[q: t]
         greater_array = quick_sort_prime(array[t:])
-        if len(equal_array) == 0:
-            smaller_array.extend(greater_array)
-            return smaller_array
-        elif len(smaller_array) == 0:
-            equal_array.extend(greater_array)
-            return equal_array
-        elif len(greater_array) == 0:
-            smaller_array.extend(equal_array)
-            return smaller_array
-        else:
-            smaller_array.extend(equal_array)
-            smaller_array.extend(greater_array)
-            return smaller_array
+        smaller_array.extend(equal_array)
+        smaller_array.extend(greater_array)
+        return smaller_array
 
 
-@tail_call_optimized
-def tail_fib(n, acc1=0, acc2=1):
-    # 尾递归的一个例子
-    if n == 0:
-        return acc1
-    else:
-        return tail_fib(n - 1, acc2, acc1 + acc2)
-
-
-# 练习题7-4
+# 思考题7-4
 def pseudo_tail_recursion_quick_sort(array, p, r):
     # 伪尾递归版本。注意，不是真正的尾递归
     while p < r:
@@ -219,6 +200,46 @@ def pseudo_tail_recursion_quick_sort(array, p, r):
             pseudo_tail_recursion_quick_sort(array, q + 1, r)
             r = q
     return array
+
+
+# 思考题7-5
+def three_median_partition(array, p, r, n=3):
+    """
+    从列表 array[p:r] 中随机选出3个元素，然后取中位数作为pivot
+    """
+    if len(array[p:r]) > 3:
+        rand_entries = sorted(random.sample(array[p:r], k=n))
+        median = rand_entries[1]
+        array[r - 1], array[array.index(median)] = array[array.index(median)], array[r - 1]
+    return partition_prime(array, p, r)
+
+
+def three_median_quick_sort_prime(array, p, r):
+    """
+    使用三元素生成随机pivot对array划分并排序。对具有相同元素的数组进行优化
+    p<=q<=t<=r
+    递归深度lg(r-p+1)
+    """
+    while p < r:
+        array, q, t = three_median_partition(array, p, r)
+        if q < math.floor((p+t-1)/2):
+            three_median_quick_sort_prime(array, p, q)
+            p = t
+        else:
+            three_median_partition(array, t, r)
+            r = q
+    return array
+
+# TODO 性能最优排序算法：three_median_quick_sort_prime
+
+
+# 一个尾递归的例子
+@tail_call_optimized
+def tail_fib(n, acc1=0, acc2=1):
+    if n == 0:
+        return acc1
+    else:
+        return tail_fib(n - 1, acc2, acc1 + acc2)
 
 
 if __name__ == '__main__':
@@ -240,7 +261,11 @@ if __name__ == '__main__':
     print(pseudo_tail_recursion_quick_sort(B[:], 0, len(B[:])))
     print(pseudo_tail_recursion_quick_sort(C[:], 0, len(C[:])))
     print(pseudo_tail_recursion_quick_sort(D[:], 0, len(D[:])))
-    # print(tail_fib(10000))
+    print(tail_fib(10000))
+    print(three_median_quick_sort_prime(A[:], 0, len(A)))
+    print(three_median_quick_sort_prime(B[:], 0, len(B)))
+    print(three_median_quick_sort_prime(C[:], 0, len(C)))
+    print(three_median_quick_sort_prime(D[:], 0, len(D)))
 
     # 思考题7-1
     """
