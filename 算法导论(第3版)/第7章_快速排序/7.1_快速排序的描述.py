@@ -220,17 +220,10 @@ def three_median_quick_sort_prime(array, p, r):
     p<=q<=t<=r
     递归深度lg(r-p+1)
     """
-    while p < r:
-        array, q, t = three_median_partition(array, p, r)
-        if q < math.floor((p+t-1)/2):
-            three_median_quick_sort_prime(array, p, q)
-            p = t
-        else:
-            three_median_partition(array, t, r)
-            r = q
+    array, q, t = three_median_partition(array, p, r)
+    pseudo_tail_recursion_quick_sort(array, p, q)
+    pseudo_tail_recursion_quick_sort(array, t, r)
     return array
-
-# TODO 性能最优排序算法：three_median_quick_sort_prime
 
 
 # 一个尾递归的例子
@@ -243,14 +236,16 @@ def tail_fib(n, acc1=0, acc2=1):
 
 
 if __name__ == '__main__':
+    # TODO 性能最优排序算法：three_median_quick_sort_prime
     A = [2, 8, 7, 1, 3, 5, 6, 4]
     B = [13, 19, 9, 5, 12, 8, 7, 4, 11, 2, 6, 21]
-    C = [1, 2, 3, 4, 5, 4, 4, 3]
+    C = [1, 2, 3, 4, 5, 6, 7, 4, 4, 3]
     D = [1, 1, 1, 1, 1]
     print(quick_sort(A[:]))
     print(randomized_quick_sort(A[:]))
     print(hoare_quick_sort(A[:]))
     print(randomized_partition_prime(A[:], 0, len(A)))
+    print(randomized_partition_prime(B[:], 0, len(A)))
     print(randomized_partition_prime(C[:], 0, len(C)))
     print(randomized_partition_prime(D[:], 0, len(D)))
     print(quick_sort_prime(A[:]))
@@ -261,11 +256,11 @@ if __name__ == '__main__':
     print(pseudo_tail_recursion_quick_sort(B[:], 0, len(B[:])))
     print(pseudo_tail_recursion_quick_sort(C[:], 0, len(C[:])))
     print(pseudo_tail_recursion_quick_sort(D[:], 0, len(D[:])))
-    print(tail_fib(10000))
     print(three_median_quick_sort_prime(A[:], 0, len(A)))
     print(three_median_quick_sort_prime(B[:], 0, len(B)))
     print(three_median_quick_sort_prime(C[:], 0, len(C)))
     print(three_median_quick_sort_prime(D[:], 0, len(D)))
+    print(tail_fib(10000))
 
     # 思考题7-1
     """
