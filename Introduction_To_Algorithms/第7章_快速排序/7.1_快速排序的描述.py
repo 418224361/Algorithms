@@ -226,6 +226,62 @@ def tail_fib(n, acc1=0, acc2=1):
         return tail_fib(n - 1, acc2, acc1 + acc2)
 
 
+# -------------------- 思考题7-6，模糊排序 -------------------
+def find_intersection(array, p, r):
+    pivot = random.sample(array[p:r], k=1)[0]
+    array.remove(pivot)
+    array.append(pivot)
+    a = pivot[0]
+    b = pivot[1]
+    for interval in array:
+        if interval[1] >= a and interval[0] <= b:
+            if interval[0] >= a:
+                a = interval[0]
+            if interval[1] <= b:
+                b = interval[1]
+    return array, [a, b]
+
+
+def partition_left(array, a, p, r):
+    """
+    p<=q<=r
+    :return: 排序后的array[p:r]以及q
+    """
+    i = p - 1
+    for j in range(p, r - 1):
+        if array[j][1] <= a:
+            i += 1
+            array[i], array[j] = array[j], array[i]
+    array[i + 1], array[r - 1] = array[r - 1], array[i + 1]
+    return array, i + 1
+
+
+def partition_right(array, b, q, r):
+    """
+    q<=t<=r
+    :return: 排序后的array[p:r]以及t
+    """
+    i = q - 1
+    for j in range(q, r - 1):
+        if array[j][0] >= b:
+            i += 1
+            array[i], array[j] = array[j], array[i]
+    array[i + 1], array[r - 1] = array[r - 1], array[i + 1]
+    return array, i + 1
+
+
+def fuzzy_sort(array, p, r):
+    if p <= r - 1:
+        return array
+    else:
+        array, interval = find_intersection(array, p, r)
+        array, q = partition_left(array, interval[0], p, r)
+        array, t = partition_right(array, interval[1], q, r)
+        fuzzy_sort(array, p, q)
+        fuzzy_sort(array, t, r)
+    return array
+
+
 if __name__ == '__main__':
     A = [2, 8, 7, 1, 3, 5, 6, 4]
     B = [13, 19, 9, 5, 12, 8, 7, 4, 11, 2, 6, 21]
