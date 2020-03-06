@@ -1,6 +1,7 @@
 import random
 import math
 from Introduction_To_Algorithms.TailRecursion import tail_call_optimized
+import time
 
 
 # -------------------- 快速排序(基础版本) -------------------
@@ -11,7 +12,7 @@ def partition(array, p, r):
     """
     pivot = array[r - 1]
     i = p - 1
-    for j in range(p, r-1):
+    for j in range(p, r - 1):
         if array[j] <= pivot:
             i += 1
             array[i], array[j] = array[j], array[i]
@@ -28,7 +29,7 @@ def quick_sort_basic(array, p=None, r=None):
     if p is None and r is None:
         p = 0
         r = len(array)
-    if p >= r-1:
+    if p >= r - 1:
         return array
     else:
         array, q = partition(array, p, r)
@@ -164,7 +165,7 @@ def randomized_quick_sort_prime(array, p=None, r=None):
     else:
         array, q, t = randomized_partition_prime(array, p, r)
         randomized_quick_sort_prime(array, p, q)
-        randomized_quick_sort_prime(array, t+1, r)
+        randomized_quick_sort_prime(array, t + 1, r)
         return array
 
 
@@ -184,7 +185,7 @@ def pseudo_tail_recursion_quick_sort(array, p=None, r=None):
             pseudo_tail_recursion_quick_sort(array, p, q)
             p = q + 1
         else:
-            pseudo_tail_recursion_quick_sort(array, q+1, r)
+            pseudo_tail_recursion_quick_sort(array, q + 1, r)
             r = q
     return array
 
@@ -228,9 +229,10 @@ def tail_fib(n, acc1=0, acc2=1):
 
 # -------------------- 思考题7-6，模糊排序 -------------------
 def find_intersection(array, p, r):
+    """
+    从array[p:r]中随机选择一个元素(区间)，然后和array[p:r]的所有与其相交非空的元素(区间)取交集，获得区间[a,b]
+    """
     pivot = random.sample(array[p:r], k=1)[0]
-    array.remove(pivot)
-    array.append(pivot)
     a = pivot[0]
     b = pivot[1]
     for interval in array:
@@ -244,6 +246,7 @@ def find_intersection(array, p, r):
 
 def partition_left(array, a, p, r):
     """
+    array中所有右端点小于a的元素(区间)放在列表左侧，并返回最后一个元素的索引值q，满足：
     p<=q<=r
     :return: 排序后的array[p:r]以及q
     """
@@ -252,29 +255,32 @@ def partition_left(array, a, p, r):
         if array[j][1] <= a:
             i += 1
             array[i], array[j] = array[j], array[i]
-    array[i + 1], array[r - 1] = array[r - 1], array[i + 1]
     return array, i + 1
 
 
 def partition_right(array, b, q, r):
     """
+    array中所有左端点大于b的元素(区间)放在列表右侧，并返回第一个元素的索引值t，满足：
     q<=t<=r
     :return: 排序后的array[p:r]以及t
     """
-    i = q - 1
-    for j in range(q, r - 1):
+    i = r
+    for j in range(r - 1, q - 1, -1):
         if array[j][0] >= b:
-            i += 1
+            i -= 1
             array[i], array[j] = array[j], array[i]
-    array[i + 1], array[r - 1] = array[r - 1], array[i + 1]
-    return array, i + 1
+    return array, i
 
 
 def fuzzy_sort(array, p, r):
-    if p <= r - 1:
+    if p >= r - 1:
         return array
     else:
         array, interval = find_intersection(array, p, r)
+        # partion_left和partion_right把array[p:r]分成三部分：
+        # array[p:q]中元素，和[a,b]无交集且区间位于[a,b]左侧
+        # array[q:t+1]中元素，和[a,b]相交
+        # array[t+1:r]中元素，和[a,b]无交集且区间位于[a,b]右侧
         array, q = partition_left(array, interval[0], p, r)
         array, t = partition_right(array, interval[1], q, r)
         fuzzy_sort(array, p, q)
@@ -287,6 +293,7 @@ if __name__ == '__main__':
     B = [13, 19, 9, 5, 12, 8, 7, 4, 11, 2, 6, 21]
     C = [1, 2, 3, 4, 5, 6, 7, 4, 4, 3]
     D = [1, 1, 1, 1, 1]
+    I = [[1, 2], [5, 6], [1.5, 3.5], [2.5, 3.5], [4.5, 4.7], [3, 5.9], [3, 4], [100, 200]]
 
     print(quick_sort_basic(A[:]))
     print(quick_sort_basic(B[:]))
@@ -319,6 +326,8 @@ if __name__ == '__main__':
     print(quick_sort(D[:]))
 
     print(tail_fib(10000))
+
+    print(fuzzy_sort(I, 0, len(I)))
 
     # 思考题7-1
     """
