@@ -2,7 +2,10 @@ import math
 
 
 def find_max_crossing_subarray(array, low, mid, high):
-    # 序列array[low, high]的跨mid的最大子序列
+    """
+    查找跨越列表array[low:high]的中点mid的最大子数组
+    :return:左端点索引,右端点索引,最大和
+    """
     if max(array) < 0:
         return array.index(max(array)), array.index(max(array)) + 1, max(array)
     elif min(array) >= 0:
@@ -27,24 +30,26 @@ def find_max_crossing_subarray(array, low, mid, high):
         return left_max, right_max, sum(array[left_max: right_max])
 
 
-def find_max_subarray(array, low, high):
-    # 序列array[low: high]的最大子序列，左闭右开
-    if high - low == 0:
-        return low, high, array[low]
-    elif high - low == 1:
-        return find_max_crossing_subarray(array, low, low + 1, high)
+def find_max_subarray(array, low=None, high=None):
+    """
+    序列array[low:high]的最大和子序列，左闭右开
+    """
+    if low is None and high is None:
+        low = 0
+        high = len(array)-1
+    if high - low <= 1:  # 递归的base条件
+        return find_max_crossing_subarray(array, low, low, high)
+    mid = math.floor((low + high) / 2)
+    left_low, left_high, left_sum = find_max_subarray(array, low, mid)
+    right_low, right_high, right_sum = find_max_subarray(array, mid, high)
+    cross_low, cross_high, cross_sum = find_max_crossing_subarray(array, low, mid, high)
+    max_sum = max(left_sum, right_sum, cross_sum)
+    if left_sum == max_sum:
+        return left_low, left_high, max_sum
+    elif cross_sum == max_sum:
+        return cross_low, cross_high, max_sum
     else:
-        mid = math.floor((low + high) / 2)
-        left_low, left_high, left_sum = find_max_subarray(array, low, mid)
-        right_low, right_high, right_sum = find_max_subarray(array, mid, high)
-        cross_low, cross_high, cross_sum = find_max_crossing_subarray(array, low, mid, high)
-        max_sum = max(left_sum, right_sum, cross_sum)
-        if left_sum == max_sum:
-            return left_low, left_high, max_sum
-        elif cross_sum == max_sum:
-            return cross_low, cross_high, max_sum
-        else:
-            return right_low, right_high, max_sum
+        return right_low, right_high, max_sum
 
 
 # 练习4.1-2
@@ -95,7 +100,7 @@ if __name__ == '__main__':
     A = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7]
     B = [-abs(i) for i in A]
     C = [abs(i) for i in A]
-    print(find_max_subarray(A, 0, len(A) - 1))
-    print(find_max_subarray(B, 0, len(B) - 1))
-    print(find_max_subarray(C, 0, len(C) - 1))
+    print(find_max_subarray(A[:]))
+    print(find_max_subarray(B[:]))
+    print(find_max_subarray(C[:]))
     print(lx41_4(B, 0, len(B) - 1))
