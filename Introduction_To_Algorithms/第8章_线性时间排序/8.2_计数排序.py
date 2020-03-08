@@ -31,8 +31,8 @@ def lx82_4(array, a, b):
     for j in range(len(array)):
         c[array[j]] += 1
     for i in range(1, k):
-        c[i] += c[i-1]
-    return c[math.floor(b)] - c[math.floor(a-1)]
+        c[i] += c[i - 1]
+    return c[math.floor(b)] - c[math.floor(a - 1)]
 
 
 if __name__ == '__main__':
