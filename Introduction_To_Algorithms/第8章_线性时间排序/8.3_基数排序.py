@@ -56,7 +56,7 @@ def general_greater(item1, item2):
 
 
 # -------------------- 快速排序(稳定排序版本) -------------------
-def partition(array, p, r):
+def _partition(array, p, r):
     """
     选取array[r-1]为主元(pivot element)，对列表array[p:r]进行原址重排。注意不含r
     :return: 重排后的列表以及主元
@@ -83,13 +83,13 @@ def quick_sort_basic(array, p=None, r=None):
     if p >= r - 1:
         return array
     else:
-        array, q = partition(array, p, r)
+        array, q = _partition(array, p, r)
         quick_sort_basic(array, p, q)
         quick_sort_basic(array, q, r)
         return array
 
 
-def stable_quick_sort(array, p=None, r=None):
+def stable_quick_sort(array, p=None, r=None, reverse=True):
     """
     快速排序的稳定排序版本
     为每个元素增加一个索引值，在元素值相等的情况下，比较索引值后排序
@@ -103,7 +103,11 @@ def stable_quick_sort(array, p=None, r=None):
         if str(array[i]).isdigit:
             array[i] = array[i], i
         else:  # 含有字母，数字和符号
-            array[i] = array[i], array[i].split(), i
+            if reverse is True:  # 从最低位开始排序
+                split_list = array[i].split()[::-1]
+            else:  # 从最高位开始排序
+                split_list = array[i].split()[::-1]
+            array[i] = array[i], split_list, i
     # 调用稳定排序版本的quick_sort
     array = quick_sort_basic(array, p, r)
     # 去除索引值
@@ -122,8 +126,8 @@ def radix_sorting(array):
 
 
 if __name__ == '__main__':
-    C = [1, 2, 3, 4, 5, 6, 7, 4, 4, 3]
-    print(stable_quick_sort(C))
+    # C = [1, 2, 3, 4, 5, 6.1, 7, 4, 4, 3]
+    # print(stable_quick_sort(C))
 
     alphabeta = ['cow', 'dog', 'sea', 'rug', 'row', 'mob', 'box', 'tab', 'bar', 'ear', 'tar', 'dig', 'big', 'tea',
                  'now', 'fox']
