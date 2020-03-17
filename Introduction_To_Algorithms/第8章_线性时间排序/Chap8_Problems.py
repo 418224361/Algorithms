@@ -6,7 +6,7 @@ def jug_partition(red, blue, p, r):
     # 首先从蓝桶中随机选出一个blue_pivot，用其对红桶做partition，同时找出相同的红桶red_pivot，再用red_pivot对蓝桶做partition.
     blue_pivot_index = random.randrange(p, r)
     blue_pivot = blue[blue_pivot_index]
-    
+
     # 对红桶进行partition
     l = p - 1
     for j in range(p, r - 1):
@@ -22,7 +22,7 @@ def jug_partition(red, blue, p, r):
                 l += 1
                 red[l], red[j] = red[j], red[l]
     red[l + 1], red[r - 1] = red[r - 1], red[l + 1]
-    
+
     # 对蓝桶进行partition
     red_pivot = red[l + 1]
     m = p - 1
@@ -57,7 +57,22 @@ def jug_quick_sort(red, blue, p=None, r=None):
         return red, blue
 
 
+# 思考题8-5, 平均排序
+def k_sort(array, k):
+    i = 0
+    k_sorted = []
+    # 每k个元素进行一次求和，剩余不足k个元素的求和一次
+    while i + k <= len(array):
+        k_sorted.append(sum(array[i:i + k]))
+        i += k
+    if i < len(array):
+        k_sorted.append(sum(array[k::]))
+    # TODO 对其进行quick sort或者merge sort
+    return k_sorted
+
+
 if __name__ == '__main__':
     jug1 = [13, 19, 9, 5, 12, 8, 7, 4, 11, 2, 6, 21, 34, 52, 56, 24, 78, 32]
     jug2 = jug1[::-1]
-    print(jug_quick_sort(jug1, jug2))
+    print(jug_quick_sort(jug1[::], jug2[::]))
+    print(k_sort(jug1, 7))
