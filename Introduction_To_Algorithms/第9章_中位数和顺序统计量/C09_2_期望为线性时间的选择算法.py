@@ -1,4 +1,4 @@
-from Introduction_To_Algorithms.第7章_快速排序.第7章_第1节_快速排序的描述 import randomized_partition
+from Introduction_To_Algorithms.第7章_快速排序.C07_1_快速排序的描述 import randomized_partition
 
 
 # 在线性时间内找出数组中第i大的元素
