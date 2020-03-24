@@ -3,10 +3,13 @@ import math
 
 #  栈
 class Stack:
+    """
+    top是堆栈最顶端元素的索引值，初始值为-1，代表堆栈为空
+    """
     def __init__(self, length):
         self.length = length
         self.array = [None for _ in range(length)]
-        self.top = -1  # 堆栈顶端元素的索引值
+        self.top = -1
 
     def full(self):
         if self.top == self.length - 1:
@@ -35,9 +38,13 @@ class Stack:
 # 队列
 class Queue:
     """
-    增加一个空位，用于判断是空还是满
+    head为队列第一个元素的索引值，初始值为None
+    tail为队列最后一个元素的下一个位置的索引值，初始值为0
+    full用来判断队列满
+    empty用来判断队列空
+    由于队列是循环队列，所以self.head==self.tail无法区分队列空还是满，
+    所以在enqueue和dequeue方法里修改full和empty
     """
-
     def __init__(self, length):
         self.array = [None for _ in range(length)]
         self.head = None
