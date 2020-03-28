@@ -7,8 +7,10 @@ class Node:
 
 
 class Link:
-    def __init__(self, head=None):
+    def __init__(self, head=None, *args):
         self.head = head
+        for arg in args:
+            self.insert(arg)
 
     def search(self, key):
         x = self.head
@@ -33,7 +35,7 @@ class Link:
         if node.next is not None:
             node.next.prev = node.prev
 
-    def delete_key(self, key):
+    def delete_key(self, key):  # 根据Node节点的关键字删除Node节点
         node = self.search(key)
         if not node:
             raise ValueError('{} not exists'.format(key))
@@ -47,17 +49,14 @@ class Link:
             x = x.next
         return size
 
-
-class SingleLink:
-    def __init__(self, head=None):
-        self.head = head
-
-    def search(self, key):
+    def iter(self):  # 迭代显示link的所有node节点
         x = self.head
-        while x is not None and x.key != key:
+        for i in range(len(self)):
+            yield x
             x = x.next
-        return x
 
+
+class SingleLink(Link):
     def insert(self, node):
         node.next = self.head
         self.head = node
@@ -87,9 +86,6 @@ class SingleLink:
 
 # 练习10.2-2 用单链表实现一个栈，要求push和pop操作时间是O(1)
 class LinkStack(SingleLink):
-    def __init__(self):
-        super().__init__()
-
     def push(self, node):
         return super().insert(node)
 
@@ -99,16 +95,51 @@ class LinkStack(SingleLink):
         return x
 
 
+# 练习10.2-3 用单链表实现一个队列，要求enqueue和dequeue操作时间是O(1)
+
+
 if __name__ == '__main__':
-    link = Link()
     node1 = Node(9, '9')
     node2 = Node(16, '16')
     node3 = Node(4, '4')
     node4 = Node(1, '1')
     node5 = Node(25, '25')
-    link.insert(node1)
-    link.insert(node2)
-    link.insert(node3)
-    link.insert(node4)
-    for i in [9, 16, 4, 1, 25]:
-        print(link.search(i).value)
+
+    link = Link(node1, node2, node3, node4)
+    for node in link.iter():
+        print(node.value)
+    print('-' * 10)
+
+    link.insert(node5)
+    for node in link.iter():
+        print(node.value)
+    print('-' * 10)
+
+    link.delete_node(node3)
+    for node in link.iter():
+        print(node.value)
+    print('-' * 10)
+
+    link.delete_key(1)
+    for node in link.iter():
+        print(node.value)
+
+    stack = LinkStack(node1, node2, node3, node4)
+    for node in stack.iter():
+        print(node.key)
+    print('-' * 10)
+
+    stack.push(node5)
+    for node in stack.iter():
+        print(node.value)
+    print('-' * 10)
+
+    stack.pop()
+    for node in stack.iter():
+        print(node.value)
+    print('-' * 10)
+
+    x = stack.pop()
+    for node in stack.iter():
+        print(node.value)
+    print('key is {}'.format(x.key))
