@@ -98,12 +98,9 @@ class SingleLink(Link):
 # 带哨兵的双向链表
 class SentinelLink:
     def __init__(self, *args):
-        sentinel = Node(None, None, None, None)
-        sentinel.next = sentinel
-        sentinel.pre =sentinel
-        # self.sentinel = Node(None, None, self, None)
-        # self.sentinel.next = self.sentinel
-        self.insert(sentinel)
+        self.sentinel = Node(None, None, None, None)
+        self.sentinel.next = self.sentinel
+        self.sentinel.pre = self.sentinel
         for arg in args:
             self.insert(arg)
 
@@ -118,7 +115,7 @@ class SentinelLink:
     def insert(self, node):
         self.sentinel.next.prev = node
         node.next = self.sentinel.next
-        self.sentinel = node.prev
+        node.prev = self.sentinel
         self.sentinel.next = node
 
     def delete_node(self, node):
@@ -164,7 +161,7 @@ class SentinelSingleLink(SentinelLink):
     def insert(self, node):
         # self.sentinel.next.prev = node
         node.next = self.sentinel.next
-        # self.sentinel = node.prev
+        # node.prev = self.sentinel
         self.sentinel.next = node
 
     def delete_node(self, node):
@@ -206,6 +203,7 @@ if __name__ == '__main__':
     node3 = Node(4, '4')
     node4 = Node(1, '1')
     node5 = Node(25, '25')
+
     #
     # link = Link(node1, node2, node3, node4)
     # for _node in link.iter():
@@ -253,4 +251,4 @@ if __name__ == '__main__':
     snode5 = SingleNode(25, '25')
 
     sl = SentinelLink(node1, node2, node3, node4, node5)
-    print(sl.search(9).value)
+    print(sl.search(25).value)
