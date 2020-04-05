@@ -18,7 +18,7 @@ class SingleNode:
 # 双向链表
 class Link:
     def __init__(self, head=None, *args):
-        self.head = head
+        self.head = head  # self.head表示链表的第一个元素
         for arg in args:
             self.insert(arg)
 
@@ -31,6 +31,13 @@ class Link:
         return x
 
     def insert(self, node):
+        # 非空链表查重
+        x = self.head
+        while x is not None:
+            if id(x) == id(node):
+                raise ValueError('Identical node, key={}'.format(node.key))
+            x = x.next
+
         node.next = self.head
         if self.head is not None:
             self.head.prev = node
@@ -69,6 +76,13 @@ class Link:
 # 单链表
 class SingleLink(Link):
     def insert(self, node):
+        # 非空链表查重
+        x = self.head
+        while x is not None:
+            if id(x) == id(node):
+                raise ValueError('Identical node, key={}'.format(node.key))
+            x = x.next
+
         node.next = self.head
         self.head = node
 
@@ -113,6 +127,13 @@ class SentinelLink:
         return x
 
     def insert(self, node):
+        # 非空链表查重
+        x = self.sentinel.next
+        while x is not self.sentinel:
+            if id(x) == id(node):
+                raise ValueError('Identical node, key={}'.format(node.key))
+            x = x.next
+
         self.sentinel.next.prev = node
         node.next = self.sentinel.next
         node.prev = self.sentinel
@@ -159,9 +180,14 @@ class SentinelSingleLink(SentinelLink):
             self.insert(arg)
 
     def insert(self, node):
-        # self.sentinel.next.prev = node
+        # 非空链表查重
+        x = self.sentinel.next
+        while x is not self.sentinel:
+            if id(x) == id(node):
+                raise ValueError('Identical node, key={}'.format(node.key))
+            x = x.next
+
         node.next = self.sentinel.next
-        # node.prev = self.sentinel
         self.sentinel.next = node
 
     def delete_node(self, node):
@@ -170,7 +196,6 @@ class SentinelSingleLink(SentinelLink):
             x = x.next
         if x is self.sentinel:
             raise ValueError('Error deletion! {} not exists'.format(node.key))
-        # x = x.next.next.pre
         x.next = x.next.next
 
     def delete_key(self, key):
@@ -179,7 +204,6 @@ class SentinelSingleLink(SentinelLink):
             x = x.next
         if x is self.sentinel:
             raise ValueError('Error deletion! {} not exists'.format(key))
-        # x = x.next.next.pre
         x.next = x.next.next
 
 
@@ -195,6 +219,41 @@ class LinkStack(SingleLink):
 
 
 # 练习10.2-3 用单链表实现一个队列，要求enqueue和dequeue操作时间是O(1)
+class LinkQueue(Link):
+    def __init__(self, head=None, tail=None, *args):
+        self.head = head  # self.head表示链表的第一个元素
+        self.tail = tail
+        for arg in args:
+            self.enqueue(arg)
+
+    def enqueue(self, node):
+        # 非空链表查重
+        x = self.head
+        while x is not None:
+            if id(x) == id(node):
+                raise ValueError('Identical node, key={}'.format(node.key))
+            x = x.next
+        # 记录链表的tail
+        if self.head is None:
+            self.tail = node
+        node.next = self.head
+        self.head = node
+
+    def dequeue(self):
+        self.delete_node(self.tail)
+
+    def delete_node(self, node):
+        x = self.head
+        if x == node:
+            self.head = x.next
+        else:
+            while x is not None and x.next != node:
+                x = x.next
+            if x is None:
+                raise IndexError('Error deletion! {} not exists'.format(node.key))
+            x.next = node.next
+        if x.next is None:
+            self.tail = x
 
 
 if __name__ == '__main__':
@@ -204,7 +263,6 @@ if __name__ == '__main__':
     node4 = Node(1, '1')
     node5 = Node(25, '25')
 
-    #
     # link = Link(node1, node2, node3, node4)
     # for _node in link.iter():
     #     print(_node.value)
@@ -242,13 +300,21 @@ if __name__ == '__main__':
     # x = stack.pop()
     # for _node in stack.iter():
     #     print(_node.value)
-    # print('key is {}'.format(x.key))
+    # # print('key is {}'.format(x.key))
+    #
+    # snode1 = SingleNode(9, '9')
+    # snode2 = SingleNode(16, '16')
+    # snode3 = SingleNode(4, '4')
+    # snode4 = SingleNode(1, '1')
+    # snode5 = SingleNode(25, '25')
+    #
+    # sl = SentinelLink(node1, node2, node3, node4, node5)
+    # print(sl.search(25).value)
+    # print('-'*10)
 
-    snode1 = SingleNode(9, '9')
-    snode2 = SingleNode(16, '16')
-    snode3 = SingleNode(4, '4')
-    snode4 = SingleNode(1, '1')
-    snode5 = SingleNode(25, '25')
-
-    sl = SentinelLink(node1, node2, node3, node4, node5)
-    print(sl.search(25).value)
+    lq = LinkQueue(node1, node2, node3, node4)
+    for node in lq.iter():
+        print(node.key)
+    # lq.enqueue(node5)
+    # print(lq.tail.key)
+    # lq.dequeue()

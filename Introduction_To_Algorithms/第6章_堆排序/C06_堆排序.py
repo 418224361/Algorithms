@@ -3,7 +3,7 @@ import math
 
 def max_heapify(array, i):
     """
-    假设i+1节点的左子二叉树树和右子二叉树都已经是最大堆，函数返回以i+1为根节点的最大堆
+    假设i+1节点的左子二叉树和右子二叉树都已经是最大堆，函数返回以i+1为根节点的最大堆
     :param array:待排序的序列
     :param i: i= 0,1,2,...,len(array)-1，是节点在array中的下标，i+1为节点编号1,2,3,...len(array)
     :return:以i+1为根节点的最大堆
