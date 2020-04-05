@@ -220,9 +220,9 @@ class LinkStack(SingleLink):
 
 # 练习10.2-3 用单链表实现一个队列，要求enqueue和dequeue操作时间是O(1)
 class LinkQueue(Link):
-    def __init__(self, head=None, tail=None, *args):
-        self.head = head  # self.head表示链表的第一个元素
-        self.tail = tail
+    def __init__(self, *args):
+        self.head = None  # self.head表示链表的第一个元素
+        self.tail = None
         for arg in args:
             self.enqueue(arg)
 
@@ -263,58 +263,62 @@ if __name__ == '__main__':
     node4 = Node(1, '1')
     node5 = Node(25, '25')
 
-    # link = Link(node1, node2, node3, node4)
-    # for _node in link.iter():
-    #     print(_node.value)
-    # print('-' * 10)
-    #
-    # link.insert(node5)
-    # for _node in link.iter():
-    #     print(_node.value)
-    # print('-' * 10)
-    #
-    # link.delete_node(node3)
-    # for _node in link.iter():
-    #     print(_node.value)
-    # print('-' * 10)
-    #
-    # link.delete_key(1)
-    # for _node in link.iter():
-    #     print(_node.value)
-    #
-    # stack = LinkStack(node1, node2, node3, node4)
-    # for _node in stack.iter():
-    #     print(_node.key)
-    # print('-' * 10)
-    #
-    # stack.push(node5)
-    # for _node in stack.iter():
-    #     print(_node.value)
-    # print('-' * 10)
-    #
-    # stack.pop()
-    # for _node in stack.iter():
-    #     print(_node.value)
-    # print('-' * 10)
-    #
-    # x = stack.pop()
-    # for _node in stack.iter():
-    #     print(_node.value)
-    # # print('key is {}'.format(x.key))
-    #
-    # snode1 = SingleNode(9, '9')
-    # snode2 = SingleNode(16, '16')
-    # snode3 = SingleNode(4, '4')
-    # snode4 = SingleNode(1, '1')
-    # snode5 = SingleNode(25, '25')
-    #
-    # sl = SentinelLink(node1, node2, node3, node4, node5)
-    # print(sl.search(25).value)
-    # print('-'*10)
+    link = Link(node1, node2, node3, node4)
+    for _node in link.iter():
+        print(_node.value)
+    print('-' * 10)
+
+    link.insert(node5)
+    for _node in link.iter():
+        print(_node.value)
+    print('-' * 10)
+
+    link.delete_node(node3)
+    for _node in link.iter():
+        print(_node.value)
+    print('-' * 10)
+
+    link.delete_key(1)
+    for _node in link.iter():
+        print(_node.value)
+
+    stack = LinkStack(node1, node2, node3, node4)
+    for _node in stack.iter():
+        print(_node.key)
+    print('-' * 10)
+
+    stack.push(node5)
+    for _node in stack.iter():
+        print(_node.value)
+    print('-' * 10)
+
+    stack.pop()
+    for _node in stack.iter():
+        print(_node.value)
+    print('-' * 10)
+
+    x = stack.pop()
+    for _node in stack.iter():
+        print(_node.value)
+    # print('key is {}'.format(x.key))
+
+    snode1 = SingleNode(9, '9')
+    snode2 = SingleNode(16, '16')
+    snode3 = SingleNode(4, '4')
+    snode4 = SingleNode(1, '1')
+    snode5 = SingleNode(25, '25')
+
+    sl = SentinelLink(node1, node2, node3, node4, node5)
+    print(sl.search(25).value)
+    print('-'*10)
 
     lq = LinkQueue(node1, node2, node3, node4)
     for node in lq.iter():
         print(node.key)
-    # lq.enqueue(node5)
-    # print(lq.tail.key)
-    # lq.dequeue()
+    print('-'*10)
+    lq.enqueue(node5)
+    print(lq.tail.key)
+    print('-'*10)
+    lq.dequeue()
+    for node in lq.iter():
+        print(node.key)
