@@ -51,6 +51,8 @@ class Link:
         # 从链表中删除一个元素
         # 首先检查待删除元素是否在链表中
         count = len(self)
+        if count == 0:
+            return ValueError('Empty link')
         exist = False
         x = self.head
         while x is not None and count > 0:
@@ -74,6 +76,8 @@ class Link:
         # 根据关键字删除元素
         # 首先检查待删除元素是否在链表中
         count = len(self)
+        if count == 0:
+            return ValueError('Empty link')
         exist = False
         x = self.head
         while x is not None and count > 0:
@@ -122,9 +126,13 @@ class SingleLink(Link):
 
     def delete(self, node):
         count = len(self)
+        if count == 0:
+            return ValueError('Empty link')
         # x是待删除元素的上一个元素
         x = self.head
-        if x == node:
+        if x is None:
+            raise ValueError('Empty link')
+        elif x == node:
             self.head = x.next
         else:
             while x is not None and x.next != node and count > 0:
@@ -137,9 +145,13 @@ class SingleLink(Link):
 
     def delete_key(self, key):
         count = len(self)
+        if count == 0:
+            return ValueError('Empty link')
         # x是待删除元素的上一个元素
         x = self.head
-        if x.key == key:
+        if x is None:
+            raise ValueError('Empty link')
+        elif x.key == key:
             self.head = x.next
         else:
             while x is not None and x.next.key != key and count > 0:
@@ -185,6 +197,8 @@ class SentinelLink:
 
     def delete(self, node):
         count = len(self)
+        if count == 0:
+            return ValueError('Empty link')
         # x是待删除元素的上一个元素
         x = self.sentinel.next
         while x is not self.sentinel and x != node and count > 0:
@@ -198,6 +212,8 @@ class SentinelLink:
 
     def delete_key(self, key):
         count = len(self)
+        if count == 0:
+            return ValueError('Empty link')
         # x是待删除元素的上一个元素
         x = self.sentinel.next
         while x is not self.sentinel and x.key != key and count > 0:
@@ -244,6 +260,8 @@ class SentinelSingleLink(SentinelLink):
 
     def delete(self, node):
         count = len(self)
+        if count == 0:
+            return ValueError('Empty link')
         # x是待删除元素的上一个元素
         x = self.sentinel
         while x.next is not self.sentinel and x.next != node and count > 0:
@@ -256,6 +274,8 @@ class SentinelSingleLink(SentinelLink):
 
     def delete_key(self, key):
         count = len(self)
+        if count == 0:
+            return ValueError('Empty link')
         # x是待删除元素的上一个元素
         x = self.sentinel
         while x.next is not self.sentinel and x.next.key != key and count > 0:
@@ -281,8 +301,9 @@ class LinkStack(SingleLink):
 # 练习10.2-3 用单链表实现一个队列，要求enqueue和dequeue操作时间是O(1)
 class LinkQueue(Link):
     def __init__(self, *args):
-        self.head = None  # self.head表示链表的第一个元素
-        self.tail = None
+        self.head = None  # 链表的第一个元素
+        self.tail = None  # 链表的最后一个元素
+        self.pretail = None  # 链表的倒数第二个元素
         self._length = 0
         for arg in args:
             self.enqueue(arg)
@@ -294,31 +315,23 @@ class LinkQueue(Link):
             if id(x) == id(node):
                 raise ValueError('Identical node, key={}'.format(node.key))
             x = x.next
-        # 记录链表的tail
+        # 记录链表的最后一个元素
         if self.head is None:
             self.tail = node
+        # 记录链表的倒数第二个元素
+        elif self.head.next is None:
+            self.pretail = node
         node.next = self.head
         self.head = node
+        self._length += 1
 
     def dequeue(self):
-        self._delete_node(self.tail)
-
-    def _delete_node(self, node):
-        count = len(self)
-        # x是待删除元素的上一个元素
-        x = self.head
-        if x == node:
-            self.head = x.next
-        else:
-            while x is not None and x.next != node and count > 0:
-                x = x.next
-                count -= 1
-            if x is None or count == 0:
-                raise IndexError('Error deletion! {} not exists in link'.format(node.key))
-            x.next = node.next
-        if x.next is None:
-            self.tail = x
+        if len(self) == 0:
+            raise ValueError('Empty queue')
+        x = self.tail
+        self.pretail.next = None
         self._length -= 1
+        return x
 
 
 if __name__ == '__main__':
@@ -336,169 +349,167 @@ if __name__ == '__main__':
     snode5 = SingleNode(5, '5')
     snode100 = SingleNode(100, '100')
 
-    # print('--Link--')
-    # link = Link(node1, node2, node3, node4)
-    # for _node in link.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # link.insert(node5)
-    # for _node in link.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # link.delete(node3)
-    # for _node in link.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # link.delete_key(4)
-    # for _node in link.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # print(id(link.search(5)) == id(node5))
-    #
-    # link.delete_key(5)
-    # link.delete_key(2)
-    # for _node in link.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    # link.delete_key(1)
-    # for _node in link.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # print('--SingleLink--')
-    # singlelink = SingleLink(snode1, snode2, snode3, snode4)
-    # for _node in singlelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # singlelink.insert(snode5)
-    # for _node in singlelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # singlelink.delete(snode3)
-    # for _node in singlelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # singlelink.delete_key(4)
-    # for _node in singlelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # print(id(singlelink.search(5)) == id(snode5))
-    #
-    # singlelink.delete_key(5)
-    # singlelink.delete_key(2)
-    # for _node in singlelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    # singlelink.delete_key(1)
-    # for _node in singlelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # print('--SentinelLink--')
-    # sentinellink = SentinelLink(node1, node2, node3, node4)
-    # for _node in sentinellink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # sentinellink.insert(node5)
-    # for _node in sentinellink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # sentinellink.delete(node3)
-    # for _node in sentinellink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # sentinellink.delete_key(4)
-    # for _node in sentinellink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # print(id(sentinellink.search(5)) == id(node5))
-    #
-    # sentinellink.delete_key(5)
-    # sentinellink.delete_key(2)
-    # for _node in sentinellink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    # sentinellink.delete_key(1)
-    # for _node in sentinellink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # print('--SentineSinglelLink--')
-    # sentinelsinglelink = SentinelSingleLink(snode1, snode2, snode3, snode4)
-    # for _node in sentinelsinglelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # sentinelsinglelink.insert(snode5)
-    # for _node in sentinelsinglelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # sentinelsinglelink.delete(snode3)
-    # for _node in sentinelsinglelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # sentinelsinglelink.delete_key(4)
-    # for _node in sentinelsinglelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    #
-    # print(id(sentinelsinglelink.search(5)) == id(snode5))
-    #
-    # sentinelsinglelink.delete_key(5)
-    # sentinelsinglelink.delete_key(2)
-    # for _node in sentinelsinglelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
-    # sentinelsinglelink.delete_key(1)
-    # for _node in sentinelsinglelink.iter():
-    #     print(_node.value, end=',')
-    # print('\n')
+    print('--Link--')
+    link = Link(node1, node2, node3, node4)
+    for _node in link.iter():
+        print(_node.value, end=',')
+    print('\n')
 
+    link.insert(node5)
+    for _node in link.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    link.delete(node3)
+    for _node in link.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    link.delete_key(4)
+    for _node in link.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    print(id(link.search(5)) == id(node5))
+
+    link.delete_key(5)
+    link.delete_key(2)
+    for _node in link.iter():
+        print(_node.value, end=',')
+    print('\n')
+    link.delete_key(1)
+    for _node in link.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    print('--SingleLink--')
+    singlelink = SingleLink(snode1, snode2, snode3, snode4)
+    for _node in singlelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    singlelink.insert(snode5)
+    for _node in singlelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    singlelink.delete(snode3)
+    for _node in singlelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    singlelink.delete_key(4)
+    for _node in singlelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    print(id(singlelink.search(5)) == id(snode5))
+
+    singlelink.delete_key(5)
+    singlelink.delete_key(2)
+    for _node in singlelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+    singlelink.delete_key(1)
+    for _node in singlelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    print('--SentinelLink--')
+    sentinellink = SentinelLink(node1, node2, node3, node4)
+    for _node in sentinellink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    sentinellink.insert(node5)
+    for _node in sentinellink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    sentinellink.delete(node3)
+    for _node in sentinellink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    sentinellink.delete_key(4)
+    for _node in sentinellink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    print(id(sentinellink.search(5)) == id(node5))
+
+    sentinellink.delete_key(5)
+    sentinellink.delete_key(2)
+    for _node in sentinellink.iter():
+        print(_node.value, end=',')
+    print('\n')
+    sentinellink.delete_key(1)
+    for _node in sentinellink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    print('--SentineSinglelLink--')
+    sentinelsinglelink = SentinelSingleLink(snode1, snode2, snode3, snode4)
+    for _node in sentinelsinglelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    sentinelsinglelink.insert(snode5)
+    for _node in sentinelsinglelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    sentinelsinglelink.delete(snode3)
+    for _node in sentinelsinglelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    sentinelsinglelink.delete_key(4)
+    for _node in sentinelsinglelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    print(id(sentinelsinglelink.search(5)) == id(snode5))
+
+    sentinelsinglelink.delete_key(5)
+    sentinelsinglelink.delete_key(2)
+    for _node in sentinelsinglelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+    sentinelsinglelink.delete_key(1)
+    for _node in sentinelsinglelink.iter():
+        print(_node.value, end=',')
+    print('\n')
+
+    print('--LinkStack--')
     stack = LinkStack(node1, node2, node3, node4)
     for _node in stack.iter():
-        print(_node.key)
-    print('-' * 10)
+        print(_node.value, end=',')
+    print('\n')
 
     stack.push(node5)
     for _node in stack.iter():
-        print(_node.value)
-    print('-' * 10)
+        print(_node.value, end=',')
+    print('\n')
 
     stack.pop()
     for _node in stack.iter():
-        print(_node.value)
-    print('-' * 10)
+        print(_node.value, end=',')
+    print('\n')
 
     x = stack.pop()
     for _node in stack.iter():
-        print(_node.value)
+        print(_node.value, end=',')
+    print('\n')
+    print(x.key)
+    print('\n')
 
-    stack.pop()
-    stack.pop()
-    stack.pop()
-    stack.pop()
-
-    # TODO 队列仍有问题
-    # lq = LinkQueue(node1, node2, node3, node4)
-    # for node in lq.iter():
-    #     print(node.key)
-    # print('-' * 10)
-    # lq.enqueue(node5)
-    # lq.dequeue()
-    # for node in lq.iter():
-    #     print(node.key)
-
+    print('--LinkQueue--')
+    lq = LinkQueue(snode1, snode2, snode3, snode4)
+    for node in lq.iter():
+        print(node.key, end=',')
+    print('\n')
+    lq.enqueue(node5)
+    lq.dequeue()
+    for node in lq.iter():
+        print(node.key, end=',')
