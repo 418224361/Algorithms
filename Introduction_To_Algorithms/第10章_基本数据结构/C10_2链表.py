@@ -126,8 +126,6 @@ class SingleLink(Link):
 
     def delete(self, node):
         count = len(self)
-        if count == 0:
-            return ValueError('Empty link')
         # x是待删除元素的上一个元素
         x = self.head
         if x is None:
@@ -145,8 +143,6 @@ class SingleLink(Link):
 
     def delete_key(self, key):
         count = len(self)
-        if count == 0:
-            return ValueError('Empty link')
         # x是待删除元素的上一个元素
         x = self.head
         if x is None:
@@ -173,7 +169,7 @@ class SentinelLink:
         for arg in args:
             self.insert(arg)
 
-    def search(self, key):
+    def search(self, key):  # O(n)
         x = self.sentinel.next
         while x is not self.sentinel and x.key != key:
             x = x.next
@@ -181,7 +177,7 @@ class SentinelLink:
             raise ValueError('Error search! {} not exists'.format(key))
         return x
 
-    def insert(self, node):
+    def insert(self, node):  # O(1)
         # 非空链表查重
         x = self.sentinel.next
         while x is not self.sentinel:
@@ -195,7 +191,7 @@ class SentinelLink:
         self.sentinel.next = node
         self._length += 1
 
-    def delete(self, node):
+    def delete(self, node):  # O(n)
         count = len(self)
         if count == 0:
             return ValueError('Empty link')
@@ -210,7 +206,7 @@ class SentinelLink:
         x.next.prev = x.prev
         self._length -= 1
 
-    def delete_key(self, key):
+    def delete_key(self, key):  # O(n)
         count = len(self)
         if count == 0:
             return ValueError('Empty link')
@@ -300,6 +296,7 @@ class LinkStack(SingleLink):
 
 # 练习10.2-3 用单链表实现一个队列，要求enqueue和dequeue操作时间是O(1)
 class LinkQueue(Link):
+    # 链表的尾是队列的头
     def __init__(self, *args):
         self.head = None  # 链表的第一个元素
         self.tail = None  # 链表的最后一个元素
