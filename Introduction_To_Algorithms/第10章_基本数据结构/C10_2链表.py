@@ -282,6 +282,16 @@ class SentinelSingleLink(SentinelLink):
         x.next = x.next.next
         self._length -= 1
 
+    def reverse(self):
+        x = self.sentinel.next
+        x_next = x.next
+        x_next_next = x_next.next
+        while x.next != self.sentinel:
+            x_next.next = x
+            x = x_next
+            x_next = x_next_next
+            x_next_next = x_next.next
+
 
 # 练习10.2-2 用单链表实现一个栈，要求push和pop操作时间是O(1)
 class LinkStack(SingleLink):
@@ -467,6 +477,11 @@ if __name__ == '__main__':
     print('\n')
 
     print(id(sentinelsinglelink.search(5)) == id(snode5))
+
+    sentinelsinglelink.reverse()
+    for _node in sentinelsinglelink.iter():
+        print(_node.value, end=',')
+    print('\n')
 
     sentinelsinglelink.delete_key(5)
     sentinelsinglelink.delete_key(2)
