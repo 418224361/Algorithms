@@ -6,7 +6,7 @@ class Node:
         self.right = None
 
 
-class LeftChildRightSibingNode:
+class LeftChildRightSiblingNode:
     def __init__(self, value=None):
         self.value = value
         self.parent = None
@@ -151,7 +151,7 @@ class AnyTree:
     def __init__(self, root=None, sub_tree=None):
         if root is None:
             self.root = root
-        elif isinstance(root, LeftChildRightSibingNode):
+        elif isinstance(root, LeftChildRightSiblingNode):
             self.root = root
         else:
             raise TypeError('Neither {} is Node type or NIL'.format(root))
@@ -167,9 +167,9 @@ class AnyTree:
                 raise ValueError('Tree is full')
 
     def add_child(self, pnode, cnode):
-        if isinstance(pnode.child, LeftChildRightSibingNode):  # 如果有左孩子节点
+        if isinstance(pnode.child, LeftChildRightSiblingNode):  # 如果有左孩子节点
             child_node = pnode.child
-            while isinstance(child_node.sibling, LeftChildRightSibingNode):
+            while isinstance(child_node.sibling, LeftChildRightSiblingNode):
                 child_node = child_node.sibling
             child_node.sibling = cnode
             cnode.parent = pnode
@@ -180,16 +180,16 @@ class AnyTree:
 
 if __name__ == '__main__':
     # 任意树
-    lnode1 = LeftChildRightSibingNode(12)
-    lnode2 = LeftChildRightSibingNode(15)
-    lnode3 = LeftChildRightSibingNode(4)
-    lnode4 = LeftChildRightSibingNode(10)
-    lnode5 = LeftChildRightSibingNode(2)
-    lnode6 = LeftChildRightSibingNode(18)
-    lnode7 = LeftChildRightSibingNode(7)
-    lnode8 = LeftChildRightSibingNode(14)
-    lnode9 = LeftChildRightSibingNode(21)
-    lnode10 = LeftChildRightSibingNode(5)
+    lnode1 = LeftChildRightSiblingNode(12)
+    lnode2 = LeftChildRightSiblingNode(15)
+    lnode3 = LeftChildRightSiblingNode(4)
+    lnode4 = LeftChildRightSiblingNode(10)
+    lnode5 = LeftChildRightSiblingNode(2)
+    lnode6 = LeftChildRightSiblingNode(18)
+    lnode7 = LeftChildRightSiblingNode(7)
+    lnode8 = LeftChildRightSiblingNode(14)
+    lnode9 = LeftChildRightSiblingNode(21)
+    lnode10 = LeftChildRightSiblingNode(5)
 
     anytree = AnyTree(lnode6)
     anytree.add_child(lnode6, lnode1)
