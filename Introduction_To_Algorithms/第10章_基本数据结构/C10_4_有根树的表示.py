@@ -155,18 +155,35 @@ class AnyTree:
             self.root = root
         else:
             raise TypeError('Neither {} is Node type or NIL'.format(root))
-        if sub_tree is not None:
-            sub_root = sub_tree.root
-            if self.root.left is None:
-                self.root.left = sub_root
-                sub_root.parent = self.root
-            elif self.root.right is None:
-                self.root.right = sub_root
-                sub_root.parent = self.root
-            else:
-                raise ValueError('Tree is full')
+
+    def isempty(self):
+        """
+        判断树是否为空
+        """
+        if self.root is None:
+            return True
+        return False
+
+    def isleaf(self, node):
+        """
+        判断node是否是叶子节点
+        """
+        if node.child is None:
+            return True
+        return False
+
+    def isroot(self, node):
+        """
+        判断是否是根节点
+        """
+        if id(self.root) == id(node):
+            return True
+        return False
 
     def add_child(self, pnode, cnode):
+        """
+        增加孩子节点，如果已经有孩子节点，则依次增加右兄弟节点
+        """
         if isinstance(pnode.child, LeftChildRightSiblingNode):  # 如果有左孩子节点
             child_node = pnode.child
             while isinstance(child_node.sibling, LeftChildRightSiblingNode):
@@ -177,26 +194,84 @@ class AnyTree:
             pnode.child = cnode
             cnode.parent = pnode
 
+    def _search(self, target_node, present_node=-1):
+        if present_node == -1:
+            present_node = self.root
+        if id(target_node) == id(present_node):
+            raise StopIteration
+        child_node = present_node.child
+        sibling_node = present_node.sibling
+        if child_node:
+            self._search(target_node, child_node)
+        if sibling_node:
+            self._search(target_node, sibling_node)
+
+    def search(self, node):
+        """
+        在树中查找节点
+        """
+        try:
+            self._search(node)
+        except StopIteration:
+            return True
+        else:
+            return False
+
+    def _delete(self, node, present_node=-1, parent_node=None, left_sibling_node=None, right_sibling_node=None):
+        """
+        从树中删除节点，边走边检查，查到则删除，删完则停止
+        """
+        if present_node == -1:
+            present_node = self.root
+        if id(node) == id(present_node):
+            if self.isroot(present_node):  # 如果node是根节点
+                self.root = None
+            elif left_sibling_node:  # 如果node不是根节点也不是大哥
+                left_sibling_node.sibling = right_sibling_node
+            else:  # 如果node不是根节点，并且是大哥
+                parent_node.child = right_sibling_node
+            raise StopIteration
+
+        child_node = present_node.child
+        sibling_node = present_node.sibling
+        parent_node = present_node.parent
+        if child_node:
+            child_right_sibling_node = child_node.sibling
+            self._delete(node, child_node, present_node, None, child_right_sibling_node)
+        if sibling_node:
+            right_sibling_node = sibling_node.sibling
+            self._delete(node, sibling_node, parent_node, present_node, right_sibling_node)
+
+    def delete(self, node):
+        """
+        从树中删除节点，边走边检查，查到则删除，删完则停止
+        若节点不存在，则抛出异常
+        """
+        if self.isempty():
+            raise ValueError('Empty tree')
+        try:
+            self._delete(node)
+        except StopIteration:
+            return True
+        else:
+            raise ValueError('not exits')
+
+    def walk(self, node=-1):
+        """
+        递归打印树的所有节点
+        """
+        if node == -1:
+            node = self.root
+        print(node.value)
+        child_node = node.child
+        sibling_node = node.sibling
+        if child_node:
+            self.walk(child_node)
+        if sibling_node:
+            self.walk(sibling_node)
+
 
 if __name__ == '__main__':
-    # 任意树
-    lnode1 = LeftChildRightSiblingNode(12)
-    lnode2 = LeftChildRightSiblingNode(15)
-    lnode3 = LeftChildRightSiblingNode(4)
-    lnode4 = LeftChildRightSiblingNode(10)
-    lnode5 = LeftChildRightSiblingNode(2)
-    lnode6 = LeftChildRightSiblingNode(18)
-    lnode7 = LeftChildRightSiblingNode(7)
-    lnode8 = LeftChildRightSiblingNode(14)
-    lnode9 = LeftChildRightSiblingNode(21)
-    lnode10 = LeftChildRightSiblingNode(5)
-
-    anytree = AnyTree(lnode6)
-    anytree.add_child(lnode6, lnode1)
-    anytree.add_child(lnode6, lnode2)
-    anytree.add_child(lnode6, lnode3)
-    anytree.add_child(lnode2, lnode4)
-
     # 二叉树
     node1 = Node(12)
     node2 = Node(15)
@@ -245,3 +320,32 @@ if __name__ == '__main__':
     tree.walkman()
     print('\n')
     tree.walkwoman()
+
+    # 任意树
+    lnode1 = LeftChildRightSiblingNode(12)
+    lnode2 = LeftChildRightSiblingNode(15)
+    lnode3 = LeftChildRightSiblingNode(4)
+    lnode4 = LeftChildRightSiblingNode(10)
+    lnode5 = LeftChildRightSiblingNode(2)
+    lnode6 = LeftChildRightSiblingNode(18)
+    lnode7 = LeftChildRightSiblingNode(7)
+    lnode8 = LeftChildRightSiblingNode(14)
+    lnode9 = LeftChildRightSiblingNode(21)
+    lnode10 = LeftChildRightSiblingNode(5)
+
+    anytree = AnyTree(lnode6)
+    anytree.add_child(lnode6, lnode1)
+    anytree.add_child(lnode6, lnode2)
+    anytree.add_child(lnode6, lnode3)
+    anytree.add_child(lnode2, lnode4)
+
+    anytree.walk()
+    print('\n')
+    print(anytree.search(lnode1))
+    print('\n')
+    anytree.delete(lnode1)
+    anytree.walk()
+    print('\n')
+    anytree.delete(lnode2)
+    print('\n')
+    anytree.walk()
