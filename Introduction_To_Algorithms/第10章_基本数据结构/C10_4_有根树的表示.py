@@ -28,11 +28,22 @@ class BinaryTree:
         """
         if nodes is None:
             self.root = None
+            self.size = 0
         elif isinstance(nodes, Node):
             self.root = nodes
+            self.size = 1
         elif isinstance(nodes, list) and nodes:
+            # 对于一棵二叉树：
+            # 层数和节点数的关系：
+            # 1) layer = ceil(lg(size+1))
+            # 2) size = 2^layer-1
+            # 叶子节点的最大数是 2^(layer-1)
+            # 倒数第二层的节点数量 2^(layer-2)，依此类推
+            self.size = len(nodes)
             self.root = nodes[0]
             for i in range(len(nodes)):
+                if nodes[i].parent is not None:
+                    raise ValueError('第{}个节点已经被其它树使用'.format(i))
                 # 从0计数转换成从1计数的方法：内层函数先加1，外层函数再减1
                 if i > 0:
                     nodes[i].parent = nodes[math.floor((i + 1) / 2 - 1)]
@@ -65,37 +76,63 @@ class BinaryTree:
             return True
         return False
 
-    def add_node(self, nodes=None):
+    def add_left(self, parent, child):
         """
-        为二叉树添加节点，如果不带任何参数，等于删除二叉树
-        TODO 为二叉树添加一组节点
+        为二叉树添加左子树或者左节点
         """
-        if nodes is None:
-            self.root = None
-        elif isinstance(nodes, Node):
-            self.root = nodes
-        elif isinstance(nodes, list) and nodes:
-            self.root = nodes[0]
-            for i in range(len(nodes)):
-                # 从0计数转换成从1计数的方法：内层函数先加1，外层函数再减1
-                if i > 0:
-                    nodes[i].parent = nodes[math.floor((i + 1) / 2 - 1)]
-                if 2 * i + 1 < len(nodes):
-                    nodes[i].left = nodes[2 * i + 1]
-                if 2 * i + 2 < len(nodes):
-                    nodes[i].right = nodes[2 * i + 2]
+        if not isinstance(parent, Node) or not (isinstance(child, BinaryTree) or isinstance(child, Node)):
+            raise TypeError
+        elif not self.search(parent):
+            raise ValueError('node not exits')
+        elif parent.left:
+            raise ValueError('left child exits')
+        # elif self.search(child):
+        #     raise ValueError('child node already exits')
+        if isinstance(child, BinaryTree):
+            parent.left = child.root
+            child.root.parent = parent
+            self.size += child.size
+        else:
+            if self.search(child):
+                raise ValueError('child node already exits')
+            parent.left = child
+            child.parent = parent
+            self.size += 1
+
+    def add_right(self, parent, child):
+        """
+        为二叉树添加右子树或者右节点
+        """
+        if not isinstance(parent, Node) or not (isinstance(child, BinaryTree) or isinstance(child, Node)):
+            raise TypeError
+        elif not self.search(parent):
+            raise ValueError('node not exits')
+        elif parent.right:
+            raise ValueError('right child exits')
+        # elif self.search(child):
+        #     raise ValueError('child node already exits')
+        if isinstance(child, BinaryTree):
+            parent.right = child.root
+            child.root.parent = parent
+            self.size += child.size
+        else:
+            if self.search(child):
+                raise ValueError('child node already exits')
+            parent.right = child
+            child.parent = parent
+            self.size += 1
 
     def last_node(self):
         """
         返回树的最后一个叶子节点
         """
-        currcent_node = self.root
-        while not self.isleaf(currcent_node):
-            if currcent_node.right:
-                currcent_node = currcent_node.right
+        current_node = self.root
+        while not self.isleaf(current_node):
+            if current_node.right:
+                current_node = current_node.right
             else:
-                currcent_node = currcent_node.left
-        return currcent_node
+                current_node = current_node.left
+        return current_node
 
     def _search(self, node, root=-1):
         if root == -1:
@@ -136,6 +173,7 @@ class BinaryTree:
                 node.parent.left = None
             elif id(node.parent.right) == id(node):
                 node.parent.right = None
+        self.size -= 1
 
     def walkman(self, node=-1):
         """
@@ -306,23 +344,27 @@ if __name__ == '__main__':
     node8 = Node(14)
     node9 = Node(21)
     node10 = Node(5)
+    node11 = Node(11)
 
     lst = [node6, node1, node4, node7, node3, node5, node9]
+    sublst = [node2, node8, node10]
 
     tree = BinaryTree(lst)
-    # tree.add_node(node7, node10)
+    tree.add_right(node7, node11)
+    subtree = BinaryTree(sublst)
+    tree.add_left(node7, subtree)
 
-    print(tree.search(node1))
-    print(tree.search(node2))
-    print(tree.search(node3))
-    print(tree.search(node4))
-    print(tree.search(node5))
-    print(tree.search(node6))
-    print(tree.search(node7))
-    print(tree.search(node8))
-    print(tree.search(node9))
-    print(tree.search(node10))
-    print('\n')
+    # print(tree.search(node1))
+    # print(tree.search(node2))
+    # print(tree.search(node3))
+    # print(tree.search(node4))
+    # print(tree.search(node5))
+    # print(tree.search(node6))
+    # print(tree.search(node7))
+    # print(tree.search(node8))
+    # print(tree.search(node9))
+    # print(tree.search(node10))
+    # print('\n')
 
     # print(tree.root.value)
     # print(tree.root.left.value)
