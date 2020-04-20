@@ -1,3 +1,6 @@
+import math
+
+
 class Node:
     def __init__(self, value=None):
         self.value = value
@@ -15,23 +18,28 @@ class LeftChildRightSiblingNode:
 
 
 class BinaryTree:
-    def __init__(self, root=None, sub_tree=None):
-        if root is None:
-            self.root = root
-        elif isinstance(root, Node):
-            self.root = root
-        else:
-            raise TypeError('Neither {} is Node type or NIL'.format(root))
-        if sub_tree is not None:
-            sub_root = sub_tree.root
-            if self.root.left is None:
-                self.root.left = sub_root
-                sub_root.parent = self.root
-            elif self.root.right is None:
-                self.root.right = sub_root
-                sub_root.parent = self.root
-            else:
-                raise ValueError('Tree is full')
+    def __init__(self, nodes=None):
+        """
+        初始化一棵二叉树。
+        如果没有参数，则为空树；
+        如果参数是node类型，则生成一个只有根节点node的二叉树
+        如果参数是list类型，则按广度优先依次添加节点生成二叉树
+        :param nodes:
+        """
+        if nodes is None:
+            self.root = None
+        elif isinstance(nodes, Node):
+            self.root = nodes
+        elif isinstance(nodes, list) and nodes:
+            self.root = nodes[0]
+            for i in range(len(nodes)):
+                # 从0计数转换成从1计数的方法：内层函数先加1，外层函数再减1
+                if i > 0:
+                    nodes[i].parent = nodes[math.floor((i + 1) / 2 - 1)]
+                if 2 * i + 1 < len(nodes):
+                    nodes[i].left = nodes[2 * i + 1]
+                if 2 * i + 2 < len(nodes):
+                    nodes[i].right = nodes[2 * i + 2]
 
     def isempty(self):
         """
@@ -57,23 +65,37 @@ class BinaryTree:
             return True
         return False
 
-    def add_left(self, pnode, lnode):
+    def add_node(self, nodes=None):
         """
-        为pnode添加左节点lnode
+        为二叉树添加节点，如果不带任何参数，等于删除二叉树
+        TODO 为二叉树添加一组节点
         """
-        if not isinstance(lnode, Node):
-            raise TypeError('{} is not Node type'.format(lnode))
-        pnode.left = lnode
-        lnode.parent = pnode
+        if nodes is None:
+            self.root = None
+        elif isinstance(nodes, Node):
+            self.root = nodes
+        elif isinstance(nodes, list) and nodes:
+            self.root = nodes[0]
+            for i in range(len(nodes)):
+                # 从0计数转换成从1计数的方法：内层函数先加1，外层函数再减1
+                if i > 0:
+                    nodes[i].parent = nodes[math.floor((i + 1) / 2 - 1)]
+                if 2 * i + 1 < len(nodes):
+                    nodes[i].left = nodes[2 * i + 1]
+                if 2 * i + 2 < len(nodes):
+                    nodes[i].right = nodes[2 * i + 2]
 
-    def add_right(self, pnode, rnode):
+    def last_node(self):
         """
-        为pnode添加右节点rnode
+        返回树的最后一个叶子节点
         """
-        if not isinstance(rnode, Node):
-            raise TypeError('{} is not Node type'.format(rnode))
-        pnode.right = rnode
-        rnode.parent = pnode
+        currcent_node = self.root
+        while not self.isleaf(currcent_node):
+            if currcent_node.right:
+                currcent_node = currcent_node.right
+            else:
+                currcent_node = currcent_node.left
+        return currcent_node
 
     def _search(self, node, root=-1):
         if root == -1:
@@ -148,7 +170,7 @@ class BinaryTree:
 
 
 class AnyTree:
-    def __init__(self, root=None, sub_tree=None):
+    def __init__(self, root=None):
         if root is None:
             self.root = root
         elif isinstance(root, LeftChildRightSiblingNode):
@@ -273,6 +295,7 @@ class AnyTree:
 
 if __name__ == '__main__':
     # 二叉树
+    print('二叉树')
     node1 = Node(12)
     node2 = Node(15)
     node3 = Node(4)
@@ -284,18 +307,10 @@ if __name__ == '__main__':
     node9 = Node(21)
     node10 = Node(5)
 
-    tree = BinaryTree(node6)
+    lst = [node6, node1, node4, node7, node3, node5, node9]
 
-    tree.add_left(node6, node1)
-    tree.add_right(node6, node4)
-
-    tree.add_left(node1, node7)
-    tree.add_right(node1, node3)
-
-    tree.add_left(node4, node5)
-    tree.add_right(node4, node9)
-
-    tree.add_left(node3, node10)
+    tree = BinaryTree(lst)
+    # tree.add_node(node7, node10)
 
     print(tree.search(node1))
     print(tree.search(node2))
@@ -308,20 +323,24 @@ if __name__ == '__main__':
     print(tree.search(node9))
     print(tree.search(node10))
     print('\n')
-    print(tree.root.value)
-    print(tree.root.left.value)
-    print(tree.root.left.left.value)
-    print(tree.root.left.right.value)
-    print(tree.root.left.right.left.value)
-    print(tree.root.right.value)
-    print(tree.root.right.left.value)
-    print(tree.root.right.right.value)
+
+    # print(tree.root.value)
+    # print(tree.root.left.value)
+    # print(tree.root.left.left.value)
+    # print(tree.root.left.right.value)
+    # # print(tree.root.left.right.left.value)  # 本行应该报错
+    # print(tree.root.right.value)
+    # print(tree.root.right.left.value)
+    # print(tree.root.right.right.value)
+    # print('\n')
 
     tree.walkman()
     print('\n')
     tree.walkwoman()
+    print('\n')
 
     # 任意树
+    print('任意树')
     lnode1 = LeftChildRightSiblingNode(12)
     lnode2 = LeftChildRightSiblingNode(15)
     lnode3 = LeftChildRightSiblingNode(4)
