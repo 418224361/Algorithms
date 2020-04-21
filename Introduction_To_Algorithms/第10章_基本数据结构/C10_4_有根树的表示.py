@@ -173,26 +173,30 @@ class BinaryTree:
                 node.parent.left = None
             elif id(node.parent.right) == id(node):
                 node.parent.right = None
-        self.size -= 1
+        self.size = len(self.walkman())
 
-    def walkman(self, node=-1):
+    def walkman(self, node=-1, node_list=None):
         """
-        递归打印树的所有节点
+        递归遍历树的所有节点
         """
+        if node_list is None:
+            node_list = []
         if node == -1:
             node = self.root
-        print(node.value)
+        node_list.append(node.value)
         left_son = node.left
         right_son = node.right
         if left_son:
-            self.walkman(left_son)
+            self.walkman(left_son, node_list)
         if right_son:
-            self.walkman(right_son)
+            self.walkman(right_son, node_list)
+        return node_list
 
     def walkwoman(self):
         """
-        非递归打印树的所有节点
+        非递归遍历树的所有节点
         """
+        nodes_list = []
         stack = [self.root]
         while stack:
             node = stack[-1]
@@ -202,9 +206,10 @@ class BinaryTree:
             stack.pop()
             if stack:
                 node = stack.pop()
-                print(node.value)
+                nodes_list.append(node.value)
                 node = node.right
                 stack.append(node)
+        return nodes_list
 
 
 class AnyTree:
@@ -316,24 +321,27 @@ class AnyTree:
         else:
             raise ValueError('not exits')
 
-    def walk(self, node=-1):
+    def walk(self, node=-1, node_list=None):
         """
-        递归打印树的所有节点
+        递归遍历树的所有节点
         """
+        if node_list is None:
+            node_list = []
         if node == -1:
             node = self.root
-        print(node.value)
+        node_list.append(node.value)
         child_node = node.child
         sibling_node = node.sibling
         if child_node:
-            self.walk(child_node)
+            self.walk(child_node, node_list)
         if sibling_node:
-            self.walk(sibling_node)
+            self.walk(sibling_node, node_list)
+        return node_list
 
 
 if __name__ == '__main__':
     # 二叉树
-    print('二叉树')
+    print('二叉树：')
     node1 = Node(12)
     node2 = Node(15)
     node3 = Node(4)
@@ -353,6 +361,8 @@ if __name__ == '__main__':
     tree.add_right(node7, node11)
     subtree = BinaryTree(sublst)
     tree.add_left(node7, subtree)
+    tree.delete(node2)
+    print(tree.size)
 
     # print(tree.search(node1))
     # print(tree.search(node2))
@@ -376,13 +386,11 @@ if __name__ == '__main__':
     # print(tree.root.right.right.value)
     # print('\n')
 
-    tree.walkman()
-    print('\n')
-    tree.walkwoman()
-    print('\n')
+    print(tree.walkman())
+    print(tree.walkwoman())
 
     # 任意树
-    print('任意树')
+    print('任意树：')
     lnode1 = LeftChildRightSiblingNode(12)
     lnode2 = LeftChildRightSiblingNode(15)
     lnode3 = LeftChildRightSiblingNode(4)
@@ -400,13 +408,9 @@ if __name__ == '__main__':
     anytree.add_child(lnode6, lnode3)
     anytree.add_child(lnode2, lnode4)
 
-    anytree.walk()
-    print('\n')
+    print(anytree.walk())
     print(anytree.search(lnode1))
-    print('\n')
     anytree.delete(lnode1)
-    anytree.walk()
-    print('\n')
+    print(anytree.walk())
     anytree.delete(lnode2)
-    print('\n')
-    anytree.walk()
+    print(anytree.walk())
